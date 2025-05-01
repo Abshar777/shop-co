@@ -44,6 +44,21 @@ export class ProductRepository extends BaseRepository<IProductDocument> {
         return await this.model.distinct("category");
     }
 
+    async updateProductStockBySize(productId: string, size: string, quantityChange: number): Promise<IProductDocument | null> {
+        return await this.model.findOneAndUpdate(
+            { 
+                _id: productId, 
+                'sizes.size': size 
+            },
+            { 
+                $inc: { 'sizes.$.stock': quantityChange } 
+            },
+            { 
+                new: true 
+            }
+        );
+    }
+
 
 }
 

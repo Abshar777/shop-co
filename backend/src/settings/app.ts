@@ -11,6 +11,7 @@ import { notFound, errorHandler } from '../presentation/middlewares/error.middle
 import path from 'path';
 import productRoutes from '../presentation/routes/product.route';
 import cartRoutes from '../presentation/routes/cart.route';
+import orderRoutes from '../presentation/routes/order.route';
 dotenv.config();
 const app = express();
 
@@ -41,6 +42,7 @@ if (process.env.NODE_ENV === "development") app.use(morgan("dev"));
 app.use(apiRoutes.AUTH, authRoutes);
 app.use(apiRoutes.PRODUCT, productRoutes);
 app.use(apiRoutes.CART, cartRoutes);
+app.use(apiRoutes.ORDER, orderRoutes);
 
 
 // -------------------------  error middleware-------------------------------

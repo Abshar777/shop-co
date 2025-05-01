@@ -1,8 +1,8 @@
 import { Document, Types } from 'mongoose';
-import { IProduct } from './product.interface';
+import { IProduct, IProductDocument } from './product.interface';
 
 export interface ICartItem {
-  product: IProduct ; 
+  product: IProductDocument ; 
   size: string;
   quantity: number;
 }

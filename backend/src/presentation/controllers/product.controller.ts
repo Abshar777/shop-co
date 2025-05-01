@@ -20,7 +20,7 @@ export class ProductController {
     async getAllProducts(req: Request, res: Response, next: NextFunction) {
         try {
             const products = await this.productUsecase.getAllProducts();
-            res.status(statusCodes.OK).json(products);
+            res.status(statusCodes.OK).json({ message: "Products fetched successfully", products });
         } catch (error) {
             next(error);
         }
@@ -40,7 +40,7 @@ export class ProductController {
             if (!product) {
                 return res.status(statusCodes.NOT_FOUND).json({ message: "Product not found" });
             }
-            res.status(statusCodes.OK).json(product);
+            res.status(statusCodes.OK).json({ message: "Product fetched successfully", product });
         } catch (error) {
             next(error);
         }
@@ -57,7 +57,7 @@ export class ProductController {
     async searchProducts(req: Request, res: Response, next: NextFunction) {
         try {
             const products = await this.productUsecase.searchProducts(req.query.query as string);
-            res.status(statusCodes.OK).json(products);
+            res.status(statusCodes.OK).json({ message: "Products fetched successfully", products });
         } catch (error) {
             next(error);
         }
@@ -74,7 +74,7 @@ export class ProductController {
     async getProductByCategory(req: Request, res: Response, next: NextFunction) {
         try {
             const products = await this.productUsecase.getProductByCategory(req.params.category);
-            res.status(statusCodes.OK).json(products);
+            res.status(statusCodes.OK).json({ message: "Products fetched successfully", products });
         } catch (error) {
             next(error);
         }
@@ -91,7 +91,7 @@ export class ProductController {
     async getAvailableCategories(req: Request, res: Response, next: NextFunction) {
         try {
             const categories = await this.productUsecase.getAvailableCategories();
-            res.status(statusCodes.OK).json(categories);
+            res.status(statusCodes.OK).json({ message: "Categories fetched successfully", categories });
         } catch (error) {
             next(error);
         }
@@ -131,7 +131,7 @@ export class ProductController {
 
                 },
             }, Number(req.query.limit || 10), Number(req.query.page || 1));
-            res.status(statusCodes.OK).json(products);
+            res.status(statusCodes.OK).json({ message: "Products fetched successfully", products });
         } catch (error) {
             next(error);
         }

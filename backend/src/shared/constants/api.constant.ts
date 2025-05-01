@@ -25,4 +25,5 @@ export const apiRoutes={
     AUTH:"/api/auth",
     PRODUCT:"/api/products",
     CART:"/api/cart",
+    ORDER:"/api/orders",
 }

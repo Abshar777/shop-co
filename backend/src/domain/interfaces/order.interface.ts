@@ -1,4 +1,6 @@
+// domain/interfaces/order.interface.ts
 import { Document, Types } from 'mongoose';
+import { IUser } from './user.interface';
 
 export interface IOrderedProduct {
   product: Types.ObjectId;
@@ -7,20 +9,24 @@ export interface IOrderedProduct {
   price: number;
 }
 
+
+export interface IAddress {
+  street: string;
+  city: string;
+  state: string;
+  postalCode: string;
+  country: string;
+}
+
 export interface IOrder {
-  userId: Types.ObjectId;
+  userId: Types.ObjectId | IUser | string;
   products: IOrderedProduct[];
   totalAmount: number;
   paymentMethod: 'COD' | 'ONLINE';
   paymentStatus: 'PENDING' | 'PAID' | 'FAILED';
   orderStatus: 'PLACED' | 'SHIPPED' | 'DELIVERED' | 'CANCELLED';
-  address: {
-    street: string;
-    city: string;
-    state: string;
-    postalCode: string;
-    country: string;
-  };
+  deliveryBoy?: Types.ObjectId | IUser | string;
+  address: IAddress;
   isDeleted?: boolean;
 }
 

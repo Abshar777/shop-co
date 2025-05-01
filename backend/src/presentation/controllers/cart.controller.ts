@@ -1,6 +1,7 @@
 import { NextFunction, Response } from 'express';
 import { CartUsecase } from '../../application/usecases/cart/cart.usecase';
 import { AuthRequest } from '../../domain/types/api';
+import { statusCodes } from '../../shared/constants/api.constant';
 
 
 /** @Controller */
@@ -29,7 +30,7 @@ export class CartController {
             }
             const { productId, size, quantity } = req.body;
             const cart = await this.cartUsecase.addProductToCart(req.userId, productId, size, quantity);
-            res.status(200).json(cart);
+            res.status(statusCodes.OK).json({ message: "Product added to cart successfully", cart });
         } catch (error: any) {
            next(error);
         }
@@ -52,7 +53,7 @@ export class CartController {
             }
             const { productId, size } = req.body;
             const cart = await this.cartUsecase.removeProductFromCart(req.userId, productId, size);
-            res.status(200).json(cart);
+            res.status(statusCodes.OK).json({ message: "Product removed from cart successfully", cart });
         } catch (error: any) {
             next(error);
         }
@@ -72,7 +73,7 @@ export class CartController {
                 throw new Error('User ID is required');
             }
             const cart = await this.cartUsecase.getCart(req.userId);
-            res.status(200).json(cart);
+            res.status(statusCodes.OK).json({ message: "Cart retrieved successfully", cart });
         } catch (error: any) {
             next(error);
         }
@@ -92,7 +93,7 @@ export class CartController {
                 throw new Error('User ID is required');
             }
             const cart = await this.cartUsecase.clearCart(req.userId);
-            res.status(200).json(cart);
+            res.status(statusCodes.OK).json({ message: "Cart cleared successfully", cart });
         } catch (error: any) {  
             next(error);
         }
@@ -115,7 +116,7 @@ export class CartController {
             }
             const { productId, size, quantity } = req.body;
             const cart = await this.cartUsecase.updateCartItem(req.userId, productId, size, quantity);
-            res.status(200).json(cart);
+            res.status(statusCodes.OK).json({ message: "Cart item updated successfully", cart });
         } catch (error: any) {
             next(error);
         }
@@ -135,7 +136,7 @@ export class CartController {
                 throw new Error('User ID is required');
             }
             const total = await this.cartUsecase.getCartTotal(req.userId);
-            res.status(200).json(total);
+            res.status(statusCodes.OK).json({ message: "Cart total retrieved successfully", total });
         } catch (error: any) {
             next(error);
         }
