@@ -1,6 +1,5 @@
 "use client";
 import React, { useEffect } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { navItems } from "@/constants";
 import { Input } from "../ui/input";
@@ -16,7 +15,7 @@ import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useRouter } from "nextjs-toploader/app";
 import AuthModal from "../page-sections/auth/authModal";
-
+import { useSession } from "next-auth/react";
 const MobileNavSheetContent = ({ closeDrawer }: { closeDrawer: Function }) => {
   const pathname = usePathname();
   return (
@@ -74,9 +73,11 @@ const Nav = () => {
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [isOpen, setIsOpen] = React.useState(false);
   const closeDrawer = () => setIsOpen(false);
+  const { data: session } = useSession();
   const router = useRouter();
+  console.log(session, "session");
   useEffect(() => {
-    console.log(isOpen,"isOpen");
+    console.log(isOpen, "isOpen");
     if (isOpen) {
       setIsOpen(false);
     }
@@ -132,22 +133,35 @@ const Nav = () => {
               placeholder="Search"
             />
           </div>
-          <Button
-            onPress={() => router.push("/home/cart")}
-            isIconOnly
-            size="sm"
-            className="rounded-full p-1 cursor-pointer"
-          >
-            <FaCartShopping className="" />
-          </Button>
-          <Button
-            onPress={() => setIsModalOpen(true)}
-            isIconOnly
-            size="sm"
-            className="rounded-full p-1 cursor-pointer"
-          >
-            <CgProfile className="" />
-          </Button>
+
+          {session?.user?.id ? (
+            <>
+              <Button
+                onPress={() => router.push("/home/cart")}
+                isIconOnly
+                size="sm"
+                className="rounded-full p-1 cursor-pointer"
+              >
+                <FaCartShopping className="" />
+              </Button>
+              <Button
+                onPress={() => router.push("/home/profile")}
+                isIconOnly
+                size="sm"
+                className="rounded-full p-1 cursor-pointer"
+              >
+                <CgProfile className="" />
+              </Button>
+            </>
+          ) : (
+            <Button
+              onPress={() => setIsModalOpen(true)}
+              size="sm"
+              className="rounded-sm font-semibold cursor-pointer border-primary border text-sm  bg-primary/90 active:scale-95 transition-all duration-300 text-white"
+            >
+              Login
+            </Button>
+          )}
         </div>
       </div>
       <AuthModal

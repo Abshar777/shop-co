@@ -1,4 +1,5 @@
-import React from "react";
+"use client";
+import React, { useEffect, useState } from "react";
 import {
   User,
   ShoppingBag,
@@ -10,6 +11,8 @@ import {
   Shield,
   Edit2,
 } from "lucide-react";
+import { User as TUser } from "next-auth";
+import { useSession } from "next-auth/react";
 
 interface ProfileCardProps {
   name: string;
@@ -30,6 +33,13 @@ const profileCard = ({
   location,
   profileImageUrl,
 }: ProfileCardProps) => {
+  const { data: session } = useSession();
+  const [user, setUser] = useState<TUser | null>(null);
+  useEffect(() => {
+    if (session?.user?.id) {
+      setUser(session.user);
+    }
+  }, [session]);
   return (
     <div className="w-full md:col-span-3  bg-gray-300/10 rounded-lg border-input border-1 py-4 mt-4 flex flex-col gap-4 md:px-4 px-2">
       <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
@@ -65,7 +75,7 @@ const profileCard = ({
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
               <h1 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                {name}
+                {user?.name}
                 {isVerified && (
                   <span className="bg-blue-100 text-blue-800 text-xs px-2 py-0.5 rounded-full dark:bg-blue-900 dark:text-blue-100">
                     Verified
@@ -75,7 +85,7 @@ const profileCard = ({
               <div className="flex flex-col sm:flex-row sm:items-center gap-2 mt-1 text-gray-600 dark:text-gray-300 text-sm">
                 <div className="flex items-center gap-1">
                   <Mail size={14} />
-                  <span>{email}</span>
+                  <span>{user?.email}</span>
                 </div>
                 {location && (
                   <div className="flex items-center gap-1">

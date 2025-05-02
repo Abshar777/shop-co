@@ -1,5 +1,5 @@
 import React from "react";
-import TestimonialsCarousel from "../global/tetimonialsCarousle";
+import TestimonialsCarousel from "../../global/tetimonialsCarousle";
 import { Testimonial } from "@/types";
 
 interface TestimonialsProps {

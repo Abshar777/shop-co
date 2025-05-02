@@ -38,9 +38,9 @@ const SocialIcon = ({
 
 export function Footer() {
   return (
-    <footer className="w-full rounded-t-lg bg-gray-300 border-t">
-      <div className="container mt-5 px-4 md:px-6 py-12 mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
+    <footer className="w-full rounded-t-lg py-12 md:px-[3rem] px-[.5rem] bg-gray-300 border-t">
+      {/* <div className="container mt-5 px-4 bg-red-900  md:px-6 py-12 mx-auto"> */}
+        <div className="grid mt-5   grid-cols-1 md:grid-cols-12 gap-8">
           <div className="md:col-span-3 space-y-4">
             <h2 className="text-2xl font-bold tracking-tighter">SHOP.CO</h2>
             <p className="text-sm text-muted-foreground">
@@ -184,7 +184,7 @@ export function Footer() {
             />
           </div>
         </div>
-      </div>
+      {/* </div> */}
     </footer>
   );
 }

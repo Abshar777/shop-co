@@ -1,7 +1,7 @@
 import { Breadcrumbs } from "@/components/global/breadcrumb";
-import { ProductDetails } from "@/components/page-sections/product-details";
-import { ProductGallery } from "@/components/page-sections/product-gallery";
-import ProductSctions from "@/components/page-sections/productSctions";
+import { ProductDetails } from "@/components/page-sections/shop/product-details";
+import { ProductGallery } from "@/components/page-sections/shop/product-gallery";
+import ProductSctions from "@/components/page-sections/home/productSctions";
 import { mockProduct, products } from "@/constants/data";
 import React from "react";
 

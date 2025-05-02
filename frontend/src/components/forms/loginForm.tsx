@@ -1,5 +1,4 @@
 "use client";
-import FormGenerator from "@/components/global/formgenratorV1";
 import { useAuth } from "@/hooks/useAuth";
 import Alert from "@/components/ui/alertBadge";
 import { useEffect, useState } from "react";
@@ -8,11 +7,14 @@ import { Form, FormField } from "../ui/form";
 import FormGeneratorV2 from "../global/formgenrator";
 import { FaEnvelope, FaLock } from "react-icons/fa6";
 
-export function LoginForm() {
+export function LoginForm({ callBack }: { callBack?: () => void }) {
   const { form,control, errors, onFormSubmit, isPending, isSuccess } = useAuth();
   const [err, seterr] = useState<string | null>(null);
   useEffect(() => {
-    if (isSuccess) seterr(null);
+    if (isSuccess) {
+      seterr(null);
+      // callBack?.();
+    }
     Object.values(errors).map(
       (e: any, i) => i == 0 && seterr(e?.message as string)
     );

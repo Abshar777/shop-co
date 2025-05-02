@@ -1,7 +1,7 @@
 "use client";
 import { Breadcrumbs } from "@/components/global/breadcrumb";
 import React from "react";
-import CartItems from "@/components/page-sections/cartItems";
+import CartItems from "@/components/page-sections/cart/cartItems";
 import { Button } from "@heroui/button";
 import { useRouter } from "nextjs-toploader/app";
 import { cartItems } from "@/constants/data";

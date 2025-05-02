@@ -5,7 +5,7 @@ import ProductCard from "@/components/global/productCard";
 import { PaginationDemo } from "@/components/global/pagination";
 import { CgOptions } from "react-icons/cg";
 import { Button } from "@heroui/button";
-import FilterSidebar from "@/components/page-sections/filterSidbar";
+import FilterSidebar from "@/components/page-sections/shop/filterSidbar";
 import {
   Drawer,
   DrawerContent,

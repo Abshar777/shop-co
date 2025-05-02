@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
-import { QuantityPicker } from "../global/quantity-picker";
+import { QuantityPicker } from "../../global/quantity-picker";
 import { FaTrashAlt } from "react-icons/fa";
 
 interface CartItemsProps {

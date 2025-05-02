@@ -9,7 +9,7 @@ import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Link from "next/link";
 import { ordersMockData } from "@/constants/data";
-import OrderItem from "../global/orderItem";
+import OrderItem from "../../global/orderItem";
 
 const orderCard = () => {
   const [searchTerm, setSearchTerm] = useState("");

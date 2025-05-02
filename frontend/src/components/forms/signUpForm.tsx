@@ -1,6 +1,5 @@
 "use client";
 
-import FormGenerator from "@/components/global/formgenratorV1";
 import { useAuth } from "@/hooks/useAuth";
 import Alert from "@/components/ui/alertBadge";
 import AnimatedButton from "../animation/animatedButton";
@@ -11,14 +10,16 @@ import FormGeneratorV2 from "../global/formgenrator";
 import { FaEnvelope, FaLock } from "react-icons/fa";
 import { FaUser } from "react-icons/fa6";
 
-export function SignupForm() {
+export function SignupForm({ callBack }: { callBack?: () => void }) {
   const { errors, control, onFormSubmit, isPending, isSuccess, form } =
     useAuth("signup");
   const [err, seterr] = useState<string | null>(null);
 
   useEffect(() => {
-    console.log(errors);
-    if (isSuccess) seterr(null);
+    if (isSuccess) {
+      seterr(null);
+      // callBack?.();
+    }
     const err = Object.values(errors);
     if (err.length > 0) {
       err.map((e, i) => i == 0 && seterr(e?.message as string));
@@ -87,6 +88,8 @@ export function SignupForm() {
             />
           )}
         />
+
+     
 
         <AnimatedButton
           type="submit"

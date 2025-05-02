@@ -5,6 +5,7 @@ import { Button } from "@heroui/react";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { useRef } from "react";
+import Loader from "./loader";
 
 interface Props {
   isLoading: boolean;
@@ -63,7 +64,7 @@ const AnimatedButton = ({
         size={size}
         onPress={handleClick}
         className={cn(
-          "w-full font-semibold disabled:cursor-not-allowed disabled:opacity-50 hover:disabled:opacity-50 text-secondary rounded-2xl",
+          "w-full font-semibold  active:scale-95 transition-all duration-300 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 hover:disabled:opacity-50 text-secondary rounded-2xl",
           className
         )}
         spinner={null}
@@ -95,7 +96,7 @@ const AnimatedButton = ({
               className="flex items-center justify-center gap-2"
             >
               {loadingText}
-              {spinner}
+              <Loader />
             </motion.div>
           )}
         </AnimatePresence>

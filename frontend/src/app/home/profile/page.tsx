@@ -1,8 +1,8 @@
 "use client";
 import { Breadcrumbs } from "@/components/global/breadcrumb";
 import React from "react";
-import ProfileQuickLinks from "@/components/page-sections/profileQuickLinks";
-import ProfileCard from "@/components/page-sections/profileCard";
+import ProfileQuickLinks from "@/components/page-sections/profile/profileQuickLinks";
+import ProfileCard from "@/components/page-sections/profile/profileCard";
 
 const page = () => {
   return (

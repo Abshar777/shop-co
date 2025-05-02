@@ -1,48 +1,62 @@
 "use client";
 import loginSchema from "@/schema/loginSchema";
-// import { login, signUp, verifyOtp } from "@/api/auth";
 import { useMutationData } from "./useMutation";
 import { useZodFormV2 } from "./useZodForm";
-
 import { signIn } from "next-auth/react"
 import { toast } from "sonner";
 import { useRouter } from "nextjs-toploader/app";
 import signUpSchema from "@/schema/signUpSchema";
-import { ZodTypeAny } from "zod";
-import { ZodString } from "zod";
-import { ZodObject } from "zod";
+import { IAuthSchema } from "@/types";
+import { signUp } from "@/api/auth";
+import { login } from "@/api/auth";
+import { IApiResponse } from "@/types/api";
+import { useEffect, useState } from "react";
 
 export const useAuth = (type: "login" | "signup" = "login") => {
-  const schema = (type !== "login" ? signUpSchema : loginSchema) as ZodObject<{
-    email: ZodString;
-    password: ZodString;
-  }, "strip", ZodTypeAny, {
-    email: string;
-    password: string;
-    name: string;
-  }, {
-    email: string;
-    password: string;
-    name: string;
-  }>;
-  const defaultValues = type === "login" ? { email: "", password: "" } : { email: "", password: "", name: "", role: "" }
-  const { form, control, errors, onFormSubmit } = useZodFormV2(schema, () => { }, defaultValues as any, { mode: "onSubmit", showToastOnError: true });
+  const [isLoading, setIsLoading] = useState(false);
+
+  const schema = (type !== "login" ? signUpSchema : loginSchema) as IAuthSchema;
+
+  const defaultValues = type === "login" ? { email: "", password: "" } : { email: "", password: "", name: "", role: "" };
+
+  const apiFn = type === "login" ? login : signUp;
+
+
+  const router = useRouter();
+
   const { mutate, isPending, error: mutationError, isSuccess } = useMutationData(['user'],
-    async (data: any) => {
-      const res = await signIn("credentials", {
-        email: data.email,
-        password: data.password,
-        redirect: false
-      })
-    },
+    (data: any) => apiFn(data),
     ["user"],
     onSubmit
   )
 
-  function onSubmit(response: any) {
-    console.log(response)
+  useEffect(() => {
+    if (isPending) setIsLoading(true);
+    if (mutationError) setIsLoading(false);
+  }, [isPending, mutationError]);
+
+  const { form, control, errors, onFormSubmit, reset } = useZodFormV2(schema, (data: any) => mutate(data), defaultValues as any, { mode: "onSubmit", showToastOnError: true });
+
+  async function onSubmit(data: IApiResponse) {
+    try {
+      await signIn("credentials", {
+        email: data.user.email,
+        token: data.accessToken,
+        id: data.user._id,
+        name: data.user.name,
+        redirect: false
+      })
+      const message = type === "login" ? "Login successful" : "Signup successful";
+      toast.success(message);
+      router.push("/home/profile");
+      reset();
+      setIsLoading(false);
+    } catch (error) {
+      console.log(error);
+      setIsLoading(false);
+    }
   }
-  return { form, control, errors, onFormSubmit, mutate, isPending, error: mutationError, isSuccess }
+  return { form, control, errors, onFormSubmit, mutate, isPending: isLoading, error: mutationError, isSuccess }
 
 }
 

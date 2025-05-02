@@ -2,8 +2,8 @@
 import { heroItems } from "@/constants";
 import { Button } from "@heroui/button";
 import React from "react";
-import CountDown from "../animation/countDown";
-import NumberCounter from "../animation/counter";
+import CountDown from "../../animation/countDown";
+import NumberCounter from "../../animation/counter";
 const Hero = () => {
   return (
     <div className=" relative grid md:grid-cols-2  w-full bg-[#F2F0F1]">
