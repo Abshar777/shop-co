@@ -32,3 +32,9 @@ export interface IOrderByIdResponse {
     order: IOrder
 }
 
+
+export interface ICategoryResponse {
+    message: string,
+    categories: string[]
+}
+

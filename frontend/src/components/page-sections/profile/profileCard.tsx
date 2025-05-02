@@ -10,10 +10,12 @@ import {
   Settings,
   Shield,
   Edit2,
+  LogOut,
 } from "lucide-react";
 import { User as TUser } from "next-auth";
-import { useSession } from "next-auth/react";
-
+import { useSession, signOut } from "next-auth/react";
+import { toast } from "sonner";
+import { useRouter } from "nextjs-toploader/app";
 interface ProfileCardProps {
   name: string;
   email: string;
@@ -34,6 +36,7 @@ const profileCard = ({
   profileImageUrl,
 }: ProfileCardProps) => {
   const { data: session } = useSession();
+  const router = useRouter();
   const [user, setUser] = useState<TUser | null>(null);
   useEffect(() => {
     if (session?.user?.id) {
@@ -97,9 +100,17 @@ const profileCard = ({
               </div>
             </div>
 
-            <button className="bg-white hover:bg-gray-50 text-gray-800 px-4 py-2 rounded-lg shadow-sm transition-all duration-300 text-sm font-medium flex items-center gap-1.5 self-start">
-              <Settings size={16} />
-              Edit Profile
+            <button
+              onClick={() =>
+                signOut().then(() => {
+                  toast.success("Logged out successfully");
+                  router.push("/");
+                })
+              }
+              className="bg-red-100 active:scale-95 border-red-200 border hover:bg-red-200/90 cursor-pointer text-gray-800 px-4 py-2 rounded-lg shadow-sm transition-all duration-300 text-sm font-medium flex items-center gap-1.5 self-start"
+            >
+              <LogOut size={16} />
+              Logout
             </button>
           </div>
 

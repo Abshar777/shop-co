@@ -13,5 +13,43 @@ export const getProductById = async (id: string) => {
     return response.data;
 };
 
+export const searchProducts = async (query: string) => {
+    const response = await AxiosInstance().get(`${PRODUCT_URL}/search?query=${query}`);
+    return response.data;
+};
+
+
+export const getProductByCategory = async (category: string) => {
+    const response = await AxiosInstance().get(`${PRODUCT_URL}/category/${category}`);
+    return response.data;
+};
+
+
+export const getAvailableCategories = async () => {
+    const response = await AxiosInstance().get(`${PRODUCT_URL}/categories`);
+    return response.data;
+};
+
+
+export const filterProducts = async (filters: {
+    minPrice: number;
+    maxPrice: number;
+    category: string[];
+    size: string[];
+}) => {
+    const response = await AxiosInstance().get(`${PRODUCT_URL}/filter`, { params: filters });
+    return response.data;
+};
+
+
+
+
+
+
+
+
+
+
+
 
 

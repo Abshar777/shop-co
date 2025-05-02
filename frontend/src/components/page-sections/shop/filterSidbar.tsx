@@ -1,136 +1,59 @@
 "use client";
 
 import { useState } from "react";
-import { ChevronDown, ChevronRight, ChevronUp } from "lucide-react";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
-
-// Types
-type CategoryType = "T-shirts" | "Shorts" | "Shirts" | "Hoodie" | "Jeans";
-type StyleType = "Casual" | "Formal" | "Party" | "Gym";
-type SizeType =
-  | "XX-Small"
-  | "X-Small"
-  | "Small"
-  | "Medium"
-  | "Large"
-  | "X-Large"
-  | "XX-Large"
-  | "3X-Large"
-  | "4X-Large";
-type ColorType =
-  | "green"
-  | "red"
-  | "yellow"
-  | "orange"
-  | "blue"
-  | "purple"
-  | "pink"
-  | "white"
-  | "black";
-
-interface FilterState {
-  categories: CategoryType[];
-  priceRange: [number, number];
-  colors: ColorType[];
-  sizes: SizeType[];
-  styles: StyleType[];
-}
+import { useGetAvailableCategories } from "@/hooks/useProducts";
+import { Checkbox } from "@/components/ui/checkbox";
+import { useFilterStore } from "@/store/filterStore";
 
 export default function FilterSidebar() {
-  // State for filter values
-  const [filters, setFilters] = useState<FilterState>({
-    categories: [],
-    priceRange: [50, 200],
-    colors: [],
-    sizes: [],
-    styles: [],
-  });
-
-  // State for accordion open sections
-  const [openSections, setOpenSections] = useState<Record<string, boolean>>({
-    price: true,
-    colors: true,
-    size: true,
-    style: true,
-  });
-
-  // Toggle section visibility
-  const toggleSection = (section: string) => {
-    setOpenSections((prev) => ({
-      ...prev,
-      [section]: !prev[section],
-    }));
-  };
+  const {
+    categories: selectedCategories,
+    priceRange: selectedPriceRange,
+    sizes: selectedSizes,
+    setCategories,
+    setPriceRange,
+    setSizes,
+    resetFilters,
+  } = useFilterStore();
 
   // Handle price change
   const handlePriceChange = (value: number[]) => {
-    setFilters((prev) => ({
-      ...prev,
-      priceRange: [value[0], value[1]],
-    }));
+    setPriceRange([value[0], value[1]]);
   };
 
-  // Toggle color selection
-  const toggleColor = (color: ColorType) => {
-    setFilters((prev) => {
-      if (prev.colors.includes(color)) {
-        return { ...prev, colors: prev.colors.filter((c) => c !== color) };
-      } else {
-        return { ...prev, colors: [...prev.colors, color] };
-      }
-    });
+  const toggleSize = (size: string) => {
+    const newSizes = [...selectedSizes];
+    if (newSizes.includes(size)) {
+      newSizes.splice(newSizes.indexOf(size), 1);
+    } else {
+      newSizes.push(size);
+    }
+    setSizes(newSizes);
   };
 
-  // Toggle size selection
-  const toggleSize = (size: SizeType) => {
-    setFilters((prev) => {
-      if (prev.sizes.includes(size)) {
-        return { ...prev, sizes: prev.sizes.filter((s) => s !== size) };
-      } else {
-        return { ...prev, sizes: [...prev.sizes, size] };
-      }
-    });
+  const toggleCategory = (category: string) => {
+    const newCategories = [...selectedCategories];
+    if (newCategories.includes(category)) {
+      newCategories.splice(newCategories.indexOf(category), 1);
+    } else {
+      newCategories.push(category);
+    }
+    setCategories(newCategories);
   };
 
-  // Apply filters
-  const applyFilters = () => {
-    console.log("Applying filters:", filters);
-    // Here you would typically call an API or update the parent component
-  };
-
-  // Available options
-  const categories: CategoryType[] = [
-    "T-shirts",
-    "Shorts",
-    "Shirts",
-    "Hoodie",
-    "Jeans",
-  ];
-  const colors: { name: ColorType; hex: string }[] = [
-    { name: "green", hex: "#22c55e" },
-    { name: "red", hex: "#ef4444" },
-    { name: "yellow", hex: "#eab308" },
-    { name: "orange", hex: "#f97316" },
-    { name: "blue", hex: "#0ea5e9" },
-    { name: "purple", hex: "#8b5cf6" },
-    { name: "pink", hex: "#ec4899" },
-    { name: "white", hex: "#ffffff" },
-    { name: "black", hex: "#000000" },
-  ];
-  const sizes: SizeType[] = [
-    "XX-Small",
-    "X-Small",
-    "Small",
-    "Medium",
-    "Large",
-    "X-Large",
-    "XX-Large",
-    "3X-Large",
-    "4X-Large",
-  ];
-  const styles: StyleType[] = ["Casual", "Formal", "Party", "Gym"];
+  const sizes = ["S", "M", "L", "XL", "XXL", "32", "34"];
+  const { data, isPending: isCategoriesPending } = useGetAvailableCategories();
+  const categories = data?.categories || [];
 
   return (
     <div className="w-full md:max-w-[300px] p-4 md:border-input border-transparent border md:mt-5 rounded-lg">
@@ -153,95 +76,115 @@ export default function FilterSidebar() {
           </svg>
         </button>
       </div>
-
-      {/* Categories */}
-      <div className="mb-4">
-        {categories.map((category) => (
-          <div
-            key={category}
-            className="py-2 border-b border-gray-100 flex items-center justify-between"
-          >
-            <span className="text-sm">{category}</span>
-            <ChevronRight className="h-4 w-4 text-gray-400" />
-          </div>
-        ))}
-      </div>
-
+      <Accordion
+        className="w-full -mt-4"
+        type="multiple"
+        defaultValue={["categories"]}
+      >
+        <AccordionItem value="categories">
+          <AccordionTrigger>
+            <h3 className="text-base  text-primary font-medium">Categories</h3>
+          </AccordionTrigger>
+          {/* Categories */}
+          <AccordionContent>
+            {isCategoriesPending && (
+              <div className="mb-2 w-full grid place-items-center">
+                <Loader2 className="w-4 h-4 animate-spin" />
+              </div>
+            )}
+            {!isCategoriesPending && (
+              <div className="mb-4">
+                {categories.map((category) => (
+                  <div
+                    key={category}
+                    className="py-2 border-b border-gray-100 flex items-center justify-between"
+                  >
+                    <span className="text-sm">{category}</span>
+                    <Checkbox
+                      checked={selectedCategories.includes(category)}
+                      onCheckedChange={() => toggleCategory(category)}
+                      className="h-4 w-4 text-gray-400"
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
       {/* Price */}
       <div className="mb-4">
-        <div
-          className="flex items-center justify-between py-2 cursor-pointer"
-          onClick={() => toggleSection("price")}
+        <Accordion
+          className="w-full -mt-4"
+          type="multiple"
+          defaultValue={["price"]}
         >
-          <h3 className="text-base font-medium">Price</h3>
-          {openSections.price ? (
-            <ChevronUp className="h-4 w-4 text-gray-400" />
-          ) : (
-            <ChevronDown className="h-4 w-4 text-gray-400" />
-          )}
-        </div>
-
-        {openSections.price && (
-          <div className="mt-4">
-            <div className="px-1">
-              <Slider
-                defaultValue={[50, 200]}
-                max={200}
-                min={0}
-                step={1}
-                onValueChange={handlePriceChange}
-                className="my-4"
-              />
-              <div className="flex justify-between">
-                <span className="text-sm">${filters.priceRange[0]}</span>
-                <span className="text-sm">${filters.priceRange[1]}</span>
+          <AccordionItem value="price">
+            <AccordionTrigger>
+              <h3 className="text-base font-medium">Price</h3>
+            </AccordionTrigger>
+            <AccordionContent>
+              <div className="mt-4">
+                <div className="px-1">
+                  <Slider
+                    defaultValue={[0, 1000]}
+                    max={1000}
+                    min={0}
+                    step={1}
+                    onValueChange={handlePriceChange}
+                    className="my-4"
+                  />
+                  <div className="flex justify-between">
+                    <span className="text-sm">${selectedPriceRange[0]}</span>
+                    <span className="text-sm">${selectedPriceRange[1]}</span>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-        )}
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
       </div>
 
       {/* Size */}
       <div className="mb-4">
-        <div
-          className="flex items-center justify-between py-2 cursor-pointer"
-          onClick={() => toggleSection("size")}
+        <Accordion
+          className="w-full -mt-4"
+          type="multiple"
+          defaultValue={["size"]}
         >
-          <h3 className="text-base font-medium">Size</h3>
-          {openSections.size ? (
-            <ChevronUp className="h-4 w-4 text-gray-400" />
-          ) : (
-            <ChevronDown className="h-4 w-4 text-gray-400" />
-          )}
-        </div>
-
-        {openSections.size && (
-          <div className="mt-4 grid grid-cols-2 gap-2">
-            {sizes.map((size) => (
-              <Button
-                key={size}
-                variant="outline"
-                className={cn(
-                  "h-10 rounded-full cursor-pointer text-sm",
-                  filters.sizes.includes(size)
-                    ? "bg-black  text-white hover:bg-black hover:text-white"
-                    : "bg-gray-100 border-input border text-gray-800  hover:bg-gray-200"
-                )}
-                onClick={() => toggleSize(size)}
-              >
-                {size}
-              </Button>
-            ))}
-          </div>
-        )}
+          <AccordionItem value="size">
+            <AccordionTrigger>
+              <h3 className="text-base  text-primary font-medium">Size</h3>
+            </AccordionTrigger>
+            <AccordionContent>
+              <div className="mt-4 grid grid-cols-2 gap-2">
+                {sizes.map((size) => (
+                  <Button
+                    key={size}
+                    variant="outline"
+                    className={cn(
+                      "h-10 rounded-full cursor-pointer text-sm",
+                      selectedSizes.includes(size)
+                        ? "bg-black  text-white hover:bg-black hover:text-white"
+                        : "bg-gray-100 border-input border text-gray-800  hover:bg-gray-200"
+                    )}
+                    onClick={() => toggleSize(size)}
+                  >
+                    {size}
+                  </Button>
+                ))}
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
       </div>
 
       {/* Apply Button */}
       <Button
         className="w-full bg-black cursor-pointer text-white hover:bg-black/90 rounded-lg py-6 mt-2"
-        onClick={applyFilters}
+        onClick={resetFilters}
       >
-        Apply Filter
+        Remove Filters
       </Button>
     </div>
   );

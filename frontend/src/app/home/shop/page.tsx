@@ -14,10 +14,10 @@ import {
 } from "@/components/ui/drawer";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Suspense } from "react";
-import { useProducts } from "@/hooks/useProducts";
+import { useFilterProducts, useProducts } from "@/hooks/useProducts";
 import ProductCardSkeleton from "@/components/loading/ProductCardSkeleton";
 const page = () => {
-  const { data, isPending } = useProducts();
+  const { data, isPending } = useFilterProducts();
   const products = data?.products || [];
   return (
     <div className="w-full py-5 md:px-8 px-5">

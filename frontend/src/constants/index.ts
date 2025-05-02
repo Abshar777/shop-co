@@ -4,10 +4,6 @@ export const navItems = [
         href: "/home/shop",
     },
     {
-        label: "Categories",
-        href: "/home/shop/categories",
-    },
-    {
        label: "About",
        href: "/home/about",
     },
@@ -15,6 +11,10 @@ export const navItems = [
         label: "Contact",
         href: "/home/contact",
     },
+    {
+        label: "Github",
+        href: "https://github.com/Abshar777/shop-co",
+    }
     
 ]
 

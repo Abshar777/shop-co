@@ -6,7 +6,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { QuantityPicker } from "../../global/quantity-picker";
 import { FaTrashAlt } from "react-icons/fa";
 import { IProduct } from "@/types";
-import { useAddtoCart } from "@/hooks/useCart";
+import { useAddtoCart, useRemoveFromCart } from "@/hooks/useCart";
 
 interface CartItemsProps {
   product: IProduct;
@@ -18,6 +18,7 @@ const CartItems = ({ product, qty, size }: CartItemsProps) => {
   const [quantity, setQuantity] = useState(qty);
   const [disabled, setDisabled] = useState(false);
   const { mutate: cartUpdate, isPending } = useAddtoCart("update");
+  const { mutate: removeFromCart, isPending: isRemoving } = useRemoveFromCart();
   useEffect(() => {
     setDisabled(isPending);
   }, [isPending]);
@@ -26,6 +27,13 @@ const CartItems = ({ product, qty, size }: CartItemsProps) => {
       productId: product._id,
       size: size,
       quantity: qty,
+    });
+  };
+
+  const handleRemoveFromCart = () => {
+    removeFromCart({
+      productId: product._id,
+      size: size,
     });
   };
   return (
@@ -68,6 +76,7 @@ const CartItems = ({ product, qty, size }: CartItemsProps) => {
             variant="outline"
             className="py-6 md:text-base text-xs px-6 hover:text-red-800 active:scale-95 transition-all duration-300 cursor-pointer"
             size="icon"
+            onClick={handleRemoveFromCart}
           >
             <FaTrashAlt />
           </Button>
