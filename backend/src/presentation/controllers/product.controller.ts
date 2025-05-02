@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { ProductUsecase } from "../../application/usecases/products/product.usecase";
 import { statusCodes } from "../../shared/constants/api.constant";
+import ProductModel from "../../infrastructure/db/models/product.model";
 
 /** @Controller */
 export class ProductController {
@@ -91,8 +92,10 @@ export class ProductController {
     async getAvailableCategories(req: Request, res: Response, next: NextFunction) {
         try {
             const categories = await this.productUsecase.getAvailableCategories();
+            console.log("categories", categories);
             res.status(statusCodes.OK).json({ message: "Categories fetched successfully", categories });
         } catch (error) {
+            console.log("error on categories", error);
             next(error);
         }
     }
@@ -106,36 +109,58 @@ export class ProductController {
      */
     async filterProducts(req: Request, res: Response, next: NextFunction) {
         try {
-            const filterQuery = {
-                minPrice: req.query.minPrice || 0,
-                maxPrice: req.query.maxPrice || 1000000,
-                category: req.query.category || "",
-                brand: req.query.brand || "",
-                color: req.query.color || "",
-                size: req.query.size || "",
-                material: req.query.material || "",
+            const minPrice = Number(req.query.minPrice) || 0;
+            const maxPrice = Number(req.query.maxPrice) || 1000000;
+            const category = req.query.category;
+            const size = req.query.size;
+            const limit = Number(req.query.limit) || 10;
+            const page = Number(req.query.page) || 1;
+    
+            const filter: any = {
+                price: { $gte: minPrice, $lte: maxPrice },
+            };
+    
+            if (category) {
+                // support comma-separated categories
+                filter.category = { $in: Array.isArray(category) ? category : (typeof category === 'string' ? category.split(',') : []) };
             }
-            const products = await this.productUsecase.filterProducts({
-                price: {
-                    $gte: filterQuery.minPrice,
-                    $lte: filterQuery.maxPrice,
-                },
-                category: filterQuery.category,
-                sizes: {
+    
+            if (size) {
+                filter.sizes = {
                     $elemMatch: {
-                        size: filterQuery.size,
-                    },
-                    stock: {
-                        $gt: 0,
-                    },
-
-                },
-            }, Number(req.query.limit || 10), Number(req.query.page || 1));
-            res.status(statusCodes.OK).json({ message: "Products fetched successfully", products });
+                        size: { $in: Array.isArray(size) ? size : (typeof size === 'string' ? size.split(',') : []) },
+                    }
+                };
+            }
+    
+            const products = await ProductModel.find(
+                filter,
+                {
+                    _id: 1,
+                    name: 1,
+                    price: 1,
+                    sizes: 1,
+                    category: 1,
+                    description: 1,
+                    images: 1,
+                    rating: 1,
+                    isDelete: 1,
+                    createdAt: 1,
+                    updatedAt: 1,
+                }
+            )
+            .limit(limit)
+            .skip((page - 1) * limit);
+    
+            res.status(200).json({
+                message: "Products fetched successfully",
+                products,
+            });
         } catch (error) {
             next(error);
         }
     }
+    
 
 }
 

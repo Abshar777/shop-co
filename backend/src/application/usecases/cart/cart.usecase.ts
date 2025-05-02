@@ -38,7 +38,7 @@ export class CartUsecase {
         if (!cart) {
             throw new Error("Cart not found");
         }
-        cart.items = cart.items.filter((item) => item.product.toString() !== productId.toString() || item.size !== size);
+        cart.items = cart.items.filter((item) => (item.product._id as string).toString() !== productId.toString() || item.size !== size);
         return await cart.save();
     }
 

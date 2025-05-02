@@ -33,6 +33,7 @@ export class ProductUsecase {
     }
 
     async getAvailableCategories() {
+        console.log("getAvailableCategories");
         return await this.productRepository.getCategories();
     }
 

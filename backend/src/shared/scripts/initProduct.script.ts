@@ -14,9 +14,8 @@ const data = [
     { name: 'Yellow Jacket', description: 'Bold yellow jacket', price: 65, category: 'jacket', sizes: [{ size: 'L', stock: 4 }], images: ['/yellow-jacket.webp'], rating: 4 },
 ];
 
-const addeDesc=(name:string)=>{
-    return `This  ${name} which is perfect for any occasion. Crafted from a soft and breathable fabric, it offers superior comfort and style.This  ${name} which is perfect for any occasion. Crafted from a soft and breathable fabric, it offers superior comfort and style.This  ${name} which is perfect for any occasion. Crafted from a soft and breathable fabric, it offers superior comfort and style.This  ${name} which is perfect for any occasion. Crafted from a soft and breathable fabric, it offers superior comfort and style.`
-}
+
+// sizes availbele 
 
 
 

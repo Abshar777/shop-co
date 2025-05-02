@@ -41,20 +41,21 @@ export class ProductRepository extends BaseRepository<IProductDocument> {
     }
 
     async getCategories() {
-        return await this.model.distinct("category");
+        console.log("getCategories");
+        return await this.model.find({}).distinct("category");
     }
 
     async updateProductStockBySize(productId: string, size: string, quantityChange: number): Promise<IProductDocument | null> {
         return await this.model.findOneAndUpdate(
-            { 
-                _id: productId, 
-                'sizes.size': size 
+            {
+                _id: productId,
+                'sizes.size': size
             },
-            { 
-                $inc: { 'sizes.$.stock': quantityChange } 
+            {
+                $inc: { 'sizes.$.stock': quantityChange }
             },
-            { 
-                new: true 
+            {
+                new: true
             }
         );
     }
