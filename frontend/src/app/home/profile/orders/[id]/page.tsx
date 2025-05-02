@@ -16,24 +16,23 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Card } from "@/components/ui/card";
 import { Breadcrumbs } from "@/components/global/breadcrumb";
-import { ordersMockData, ordersMockDataDetails } from "@/constants/data";
-
+import { useGetOrderById } from "@/hooks/useOrder";
+import OrderDetailsSkeleton from "@/components/loading/OrderDetailsSkeleton";
 // Mock data for orders (same as in Orders.tsx)
 
 const OrderDetail = () => {
   const { id } = useParams();
 
-  const [order, setOrder] = useState<any>(null);
+  const { data, isLoading } = useGetOrderById(id as string);
+  const order = data?.order;
 
-  useEffect(() => {
-    const neworder = ordersMockDataDetails.find((order) => order.id === id);
-    console.log(neworder);
-    setOrder(neworder);
-  }, [id]);
+  if (isLoading) {
+    return <OrderDetailsSkeleton />;
+  }
 
   if (!order) {
     return (
-      <div className="container mx-auto md:px-10 px-4 py-16 flex-1 flex items-center justify-center">
+      <div className=" mx-auto md:px-10 px-4 py-16 flex-1 flex items-center justify-center">
         <div className="text-center">
           <PackageOpen className="mx-auto h-16 w-16 text-gray-400 mb-4" />
           <h2 className="text-2xl font-bold mb-2">Order Not Found</h2>
@@ -47,21 +46,36 @@ const OrderDetail = () => {
       </div>
     );
   }
-
+  const STATUS = ["PLACED", "SHIPPED", "DELIVERED", "CANCELLED"];
   const orderSteps = [
-    { icon: Clock, label: "Order Placed", date: order.date, completed: true },
+    {
+      icon: Clock,
+      label: "Order Placed",
+      date: new Date(order.createdAt).toLocaleDateString(),
+      completed: STATUS.indexOf(order.orderStatus) >= 0,
+    },
     {
       icon: PackageOpen,
       label: "Processing",
-      date: "May 2, 2025",
-      completed: true,
+      date: new Date(order.createdAt).toLocaleDateString(),
+      completed: STATUS.indexOf(order.orderStatus) >= 1,
     },
-    { icon: Truck, label: "Shipped", date: "May 3, 2025", completed: true },
-    { icon: Check, label: "Delivered", date: "May 5, 2025", completed: true },
+    {
+      icon: Truck,
+      label: "Shipped",
+      date: new Date(order.createdAt).toLocaleDateString(),
+      completed: STATUS.indexOf(order.orderStatus) >= 2,
+    },
+    {
+      icon: Check,
+      label: "Delivered",
+      date: new Date(order.createdAt).toLocaleDateString(),
+      completed: STATUS.indexOf(order.orderStatus) >= 3,
+    },
   ];
 
   return (
-    <div className="container mx-auto md:px-10 px-4 py-8 flex-1">
+    <div className=" mx-auto md:px-10 px-4 py-8 flex-1">
       {/* Breadcrumb */}
       <Breadcrumbs />
 
@@ -77,13 +91,20 @@ const OrderDetail = () => {
             <h1 className="text-2xl font-bold flex items-center gap-2">
               Order:{" "}
               <p className=" text-xl translate-y-0.5 font-bold">
-                {order.id}
+                {`${order._id
+                  .split("")
+                  .reverse()
+                  .slice(0, 6)
+                  .reverse()
+                  .join("")}`}
               </p>
               <Badge variant="outline" className="ml-2">
-                {order.status}
+                {order.orderStatus}
               </Badge>
             </h1>
-            <p className="text-gray-500">Placed on {order.date}</p>
+            <p className="text-gray-500">
+              Placed on {new Date(order.createdAt).toLocaleDateString()}
+            </p>
           </div>
 
           <div className="flex gap-2">
@@ -91,13 +112,14 @@ const OrderDetail = () => {
               <Mail size={16} className="mr-2" /> Contact Support
             </Button>
             <Button size="sm" asChild>
-              <Link href={`/track/${order.id}`}>
+              <Link href={`/home/profile/orders/${order._id}`}>
                 <Truck size={16} className="mr-2" /> Track Order
               </Link>
             </Button>
           </div>
         </div>
       </div>
+      {/* orderStatus: 'PLACED' | 'SHIPPED' | 'DELIVERED' | 'CANCELLED'; */}
 
       {/* Order Progress */}
       <Card className="p-6 mb-8 bg-muted-foreground/10">
@@ -131,22 +153,27 @@ const OrderDetail = () => {
             <div className="w-full h-[1px] bg-primary/10"></div>
 
             <div className="space-y-6">
-              {order.items.map((item: any) => (
-                <div key={item.id} className="flex items-center gap-4">
+              {order.products.map((item) => (
+                <div key={item.product._id} className="flex items-center gap-4">
                   <div className="w-16 h-16 bg-gray-100 rounded overflow-hidden">
                     <img
-                      src={item.image}
-                      alt={item.name}
+                      src={
+                        process.env.NEXT_PUBLIC_BACKEND_URL +
+                        item.product.images[0]
+                      }
+                      alt={item.product.name}
                       className="w-full h-full object-cover"
                     />
                   </div>
                   <div className="flex-1">
-                    <h3 className="font-medium">{item.name}</h3>
+                    <h3 className="font-medium">{item.product.name}</h3>
                     <p className="text-sm text-gray-500">
                       Quantity: {item.quantity}
                     </p>
                   </div>
-                  <div className="font-medium">${item.price.toFixed(2)}</div>
+                  <div className="font-medium">
+                    ${item.product.price.toFixed(2)}
+                  </div>
                 </div>
               ))}
             </div>
@@ -156,11 +183,11 @@ const OrderDetail = () => {
             <div className="space-y-2">
               <div className="flex justify-between">
                 <span className="text-gray-500">Subtotal</span>
-                <span>${(order.total - 10).toFixed(2)}</span>
+                <span>${order.totalAmount.toFixed(2)}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-500">Shipping</span>
-                <span>${order.total >= 100 ? "0.00" : "10.00"}</span>
+                <span>Free</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-500">Tax</span>
@@ -169,7 +196,7 @@ const OrderDetail = () => {
               <Separator className="my-2" />
               <div className="flex justify-between font-bold">
                 <span>Total</span>
-                <span>${order.total.toFixed(2)}</span>
+                <span>${order.totalAmount.toFixed(2)}</span>
               </div>
             </div>
           </Card>
@@ -186,24 +213,28 @@ const OrderDetail = () => {
             <div className="w-full h-[1px] bg-primary/10"></div>
 
             <div className="space-y-1">
-              <p className="font-medium">{order.shippingAddress.name}</p>
-              <p>{order.shippingAddress.street}</p>
+              <p className="font-medium">{order.address.address}</p>
+              <p>{order.address.street}</p>
               <p>
-                {order.shippingAddress.city}, {order.shippingAddress.state}{" "}
-                {order.shippingAddress.zip}
+                {order.address.city}, {order.address.country}
               </p>
-              <p>{order.shippingAddress.country}</p>
+              <p>{order.address.country}</p>
             </div>
 
             <div className="mt-4 pt-4 border-t">
               <p className="font-medium">Shipping Method</p>
-              <p className="text-gray-500">{order.shippingMethod}</p>
+              <p className="text-gray-500">Free</p>
             </div>
 
             <div className="mt-4 pt-4 border-t">
               <p className="font-medium">Tracking Number</p>
               <p className="text-blue-600 hover:underline cursor-pointer">
-                {order.trackingNumber}
+                {`ORD-${order._id
+                  .split("")
+                  .reverse()
+                  .slice(0, 6)
+                  .reverse()
+                  .join("")}`}
               </p>
             </div>
           </Card>

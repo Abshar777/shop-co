@@ -32,12 +32,13 @@ export class OrderController {
      * @description Get order byUserId
      * @Method GET
      * @Access PRIVATE
-     * @Route /api/orders/user/:userId
+     * @Route /api/orders/user/
      * @Response 200 - Orders fetched successfully
      */
     async getOrdersByUserId(req: AuthRequest, res: Response, next: NextFunction) {
         try {
-            const orders = await this.orderUsecase.getOrdersByUserId(req.params.userId);
+            const userId = req.userId as string;
+            const orders = await this.orderUsecase.getOrdersByUserId(userId);
             res.status(statusCodes.OK).json({ message: "Orders fetched successfully", orders });
         } catch (error: any) {
             next(error);

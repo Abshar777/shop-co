@@ -3,16 +3,22 @@ import { ZodTypeAny } from "zod";
 import { ZodString } from "zod";
 
 import { ZodObject } from "zod";
+import { ISize } from "./IProduct";
 
 export interface IProduct {
-  id: number;
+  _id: string;
   name: string;
+  description: string;
   price: number;
-  originalPrice: number;
+  category: string;
+  sizes: ISize[];
+  images: string[];
+  createdAt: Date;
+  updatedAt: Date;
   rating: number;
   discount: number;
-  images: string[];
-};
+  originalPrice: number;
+}
 
 export interface Testimonial {
   id: number

@@ -13,9 +13,9 @@ export interface IOrderedProduct {
 export interface IAddress {
   street: string;
   city: string;
-  state: string;
   postalCode: string;
   country: string;
+  address: string;
 }
 
 export interface IOrder {
@@ -28,6 +28,8 @@ export interface IOrder {
   deliveryBoy?: Types.ObjectId | IUser | string;
   address: IAddress;
   isDeleted?: boolean;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface IOrderDocument extends IOrder, Document {}

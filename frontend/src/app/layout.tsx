@@ -37,6 +37,7 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body
+        suppressHydrationWarning
         className={`${geistSans.variable} ${dmSans.variable} overflow-x-hidden w-screen ${geistMono.variable} bg-gray-100 antialiased`}
       >
         <Provider session={session}>

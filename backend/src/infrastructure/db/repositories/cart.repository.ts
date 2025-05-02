@@ -7,8 +7,8 @@ export class CartRepository {
         return await CartModel.create(cart);
     }
 
-    async upsertCart(cart: ICart): Promise<ICartDocument> {
-        return await CartModel.findOneAndUpdate({ userId: cart.userId }, cart, { upsert: true, new: true }).populate('items.product');
+    async upsertCart(userId: string, productId: string, size: string, quantity: number): Promise<ICartDocument> {
+        return await CartModel.findOneAndUpdate({ userId }, { $push: { items: { product: productId, size, quantity } } }, { upsert: true, new: true }).populate('items.product');
     }
 
     async getCartByUserId(userId: string): Promise<ICartDocument | null> {

@@ -4,13 +4,8 @@ import { useState } from "react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 
-interface ProductImage {
-  src: string;
-  alt: string;
-}
-
 interface ProductGalleryProps {
-  images: ProductImage[];
+  images: string[];
 }
 
 export function ProductGallery({ images }: ProductGalleryProps) {
@@ -23,7 +18,7 @@ export function ProductGallery({ images }: ProductGalleryProps) {
           <button
             key={index}
             className={cn(
-              "relative aspect-square h-20 flex-shrink-0 overflow-hidden rounded-md border-2 transition-all",
+              "relative cursor-pointer aspect-square h-20 flex-shrink-0 overflow-hidden rounded-md border-2 transition-all",
               selectedImage === index
                 ? "border-primary"
                 : "border-transparent hover:border-muted-foreground/30"
@@ -31,8 +26,8 @@ export function ProductGallery({ images }: ProductGalleryProps) {
             onClick={() => setSelectedImage(index)}
           >
             <Image
-              src={image.src}
-              alt={image.alt}
+              src={`${process.env.NEXT_PUBLIC_BACKEND_URL}/${image}`}
+              alt={image}
               fill
               className="object-cover object-center"
               sizes="80px"
@@ -40,10 +35,10 @@ export function ProductGallery({ images }: ProductGalleryProps) {
           </button>
         ))}
       </div>
-      <div className="relative aspect-square w-full overflow-hidden rounded-md bg-muted">
+      <div className="relative aspect-square w-full overflow-hidden rounded-md bg-gray-400/30">
         <Image
-          src={images[selectedImage].src}
-          alt={images[selectedImage].alt}
+          src={`${process.env.NEXT_PUBLIC_BACKEND_URL}/${images[selectedImage]}`}
+          alt={images[selectedImage]}
           fill
           className="object-cover object-center"
           sizes="(min-width: 1024px) 50vw, 100vw"

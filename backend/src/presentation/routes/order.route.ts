@@ -6,7 +6,7 @@ const orderController = new OrderController();
 
 router.get("/",authMiddilware, orderController.getOrders.bind(orderController) );
 
-router.get("/user/:userId", authMiddilware, orderController.getOrdersByUserId.bind(orderController));
+router.get("/user/", authMiddilware, orderController.getOrdersByUserId.bind(orderController));
 
 router.get("/:orderId", authMiddilware, orderController.getOrderById.bind(orderController));
 

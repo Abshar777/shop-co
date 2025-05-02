@@ -12,31 +12,27 @@ import {
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { useUIStore } from "@/store/uiStore";
 
 const AuthModal = ({
-  isOpen,
-  closeModal,
   nowProp = "login",
 }: {
-  isOpen: boolean;
-  closeModal: () => void;
+
   nowProp: "login" | "signup";
 }) => {
   const pathname = usePathname();
   const { data: session } = useSession();
   const [now, setNow] = useState<"login" | "signup">(nowProp);
-
-  if (session?.user?.id) {
-    return null;
-  }
-  useEffect(() => {
-    if (session?.user?.id || pathname) {
-      closeModal();
+  const { isAuthModalOpen, setIsAuthModalOpen } = useUIStore();
+  useEffect(()=>{
+    if(session?.user?.id){
+      setIsAuthModalOpen(false)
     }
-  }, [pathname, session?.user?.id]);
+  },[session?.user?.id])
+ 
 
   return (
-    <Dialog open={isOpen} onOpenChange={(open) => !open && closeModal()}>
+    <Dialog open={isAuthModalOpen} onOpenChange={(open) => !open && setIsAuthModalOpen(false)}>
       <DialogContent>
         <DialogHeader className="text-center">
           <DialogTitle className="text-center text-2xl">
@@ -47,9 +43,9 @@ const AuthModal = ({
             {now === "login" ? "login" : "signup"} to your account
           </DialogDescription>
           {now === "login" ? (
-            <LoginForm callBack={closeModal} />
+            <LoginForm callBack={() => setIsAuthModalOpen(false)} />
           ) : (
-            <SignupForm callBack={closeModal} />
+            <SignupForm callBack={() => setIsAuthModalOpen(false)} />
           )}
           <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
             <span className="relative z-10 bg-background px-2 text-muted-foreground">

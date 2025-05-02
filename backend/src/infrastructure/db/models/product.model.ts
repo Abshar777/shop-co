@@ -24,11 +24,11 @@ const ProductSchema: Schema = new Schema(
             required: true,
             trim: true,
         },
-        sizes:[{
-            stock:Number,
-            size:String,
+        sizes: [{
+            stock: Number,
+            size: String,
         }],
-       
+
         images: [{
             type: String,
             default: []
@@ -44,6 +44,10 @@ const ProductSchema: Schema = new Schema(
         isDelete: {
             type: Boolean,
             default: false
+        },
+        rating: {
+            type: Number,
+            default: 0,
         },
 
     },

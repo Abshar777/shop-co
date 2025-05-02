@@ -1,35 +1,47 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 import { QuantityPicker } from "../../global/quantity-picker";
 import { FaTrashAlt } from "react-icons/fa";
+import { IProduct } from "@/types";
+import { useAddtoCart } from "@/hooks/useCart";
 
 interface CartItemsProps {
-  product: {
-    id: number;
-    name: string;
-    price: number;
-    image: string;
-    size: string;
-    quantity: number;
-  };
+  product: IProduct;
+  qty: number;
+  size: string;
 }
 
-const CartItems = ({ product }: CartItemsProps) => {
-  const [quantity, setQuantity] = useState(product.quantity);
+const CartItems = ({ product, qty, size }: CartItemsProps) => {
+  const [quantity, setQuantity] = useState(qty);
+  const [disabled, setDisabled] = useState(false);
+  const { mutate: cartUpdate, isPending } = useAddtoCart("update");
+  useEffect(() => {
+    setDisabled(isPending);
+  }, [isPending]);
+  const handleQuantityChange = (qty: number) => {
+    cartUpdate({
+      productId: product._id,
+      size: size,
+      quantity: qty,
+    });
+  };
   return (
     <div className="w-full flex items-center ">
       <div className="flex flex-1  w-full items-center gap-2">
         <div className="w-[5rem] h-[5rem] bg-zinc-700  rounded-lg overflow-hidden">
-          <img src={product.image} alt="" className="w-full h-full" />
+          <img
+            src={process.env.NEXT_PUBLIC_BACKEND_URL + product.images[0]}
+            alt=""
+            className="w-full h-full"
+          />
         </div>
         <div className="flex  flex-col gap-1">
           <p className="  font-semibold">{product.name}</p>
           <p className="text-sm font-medium">
-            Size:{" "}
-            <span className="font-normal text-zinc-500">{product.size}</span>
+            Size: <span className="font-normal text-zinc-500">{size}</span>
           </p>
           <p className="text-base font-medium">${product.price}</p>
         </div>
@@ -37,10 +49,19 @@ const CartItems = ({ product }: CartItemsProps) => {
       <div className="flex flex-col gap-2 h-full">
         <div className="flex  flex-row  h-full gap-2 items-end md:justify-between justify-end">
           <QuantityPicker
+            disabled={disabled}
             quantity={quantity}
-            onDecrement={() => setQuantity((q) => Math.max(1, q - 1))}
-            onIncrement={() => setQuantity((q) => q + 1)}
-            onQuantityChange={setQuantity}
+            onDecrement={() => {
+              setQuantity((q) => Math.max(1, q - 1));
+              handleQuantityChange(quantity - 1);
+            }}
+            onIncrement={() => {
+              setQuantity((q) => q + 1);
+              handleQuantityChange(quantity + 1);
+            }}
+            min={1}
+            max={product.sizes.find((e) => e.size === size)?.stock as number}
+            onQuantityChange={handleQuantityChange}
             className="md:w-auto w-1/2"
           />
           <Button
@@ -53,7 +74,10 @@ const CartItems = ({ product }: CartItemsProps) => {
         </div>
         <div className="w-full mt-1 flex items-center justify-end">
           <p className="text-sm font-medium">
-            Total: <span className="font-normal text-zinc-500">${product.price * quantity}</span>
+            Total:{" "}
+            <span className="font-normal text-zinc-500">
+              ${product.price * quantity}
+            </span>
           </p>
         </div>
       </div>

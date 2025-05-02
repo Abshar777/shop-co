@@ -43,8 +43,8 @@ export class OrderUsecase {
             if (!product) throw new Error(`Product not found: ${item.product._id}`);
             const sizePerProdut = product.sizes.find(e => e.size == item.size);
             if (!sizePerProdut || sizePerProdut.stock <= 0) throw new Error(`Insufficient stock for product: ${product.name}`);
+            const updatedProduct = await this.productRepository.updateProductStockBySize(product._id as string, item.size, -item.quantity);
 
-            await this.productRepository.updateProductStockBySize(product._id as string, item.size, -item.quantity);
             const productPrice = product.price * item.quantity;
             orderItems.push({
                 product: item.product._id as Types.ObjectId,
@@ -67,7 +67,7 @@ export class OrderUsecase {
     }
 
     async updateOrderStatus(orderId: string, updateStatus: "PLACED" | "SHIPPED" | "DELIVERED" | "CANCELLED") {
-        const order = await this.orderRepository.updateOrder(orderId, { orderStatus:updateStatus });
+        const order = await this.orderRepository.updateOrder(orderId, { orderStatus: updateStatus });
         if (!order) throw new Error("Order not found");
         return order;
 
@@ -99,7 +99,7 @@ export class OrderUsecase {
     }
 
     async getDistintAddress(userId: string) {
-        return await this.orderRepository.getDistintValues(userId,"address");
+        return await this.orderRepository.getDistintValues(userId, "address");
     }
 
 

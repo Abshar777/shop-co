@@ -9,6 +9,7 @@ export interface IProduct {
     images: string[];
     createdAt: Date;
     updatedAt: Date;
+    rating?: number;
 }
 
 

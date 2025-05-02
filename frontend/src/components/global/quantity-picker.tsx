@@ -10,6 +10,7 @@ interface QuantityPickerProps {
   min?: number;
   max?: number;
   className?: string;
+  disabled?: boolean;
 }
 
 export function QuantityPicker({
@@ -20,6 +21,7 @@ export function QuantityPicker({
   min = 1,
   max = 99,
   className,
+  disabled = false,
 }: QuantityPickerProps) {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = parseInt(e.target.value, 10);
@@ -38,10 +40,11 @@ export function QuantityPicker({
       )}
     >
       <button
+      
         type="button"
-        className="flex h-full w-12 items-center justify-center text-lg transition-colors hover:bg-muted disabled:pointer-events-none disabled:opacity-50"
+        className="flex cursor-pointer h-full w-12 items-center justify-center text-lg transition-colors hover:bg-muted disabled:pointer-events-none disabled:opacity-50"
         onClick={onDecrement}
-        disabled={quantity <= min}
+        disabled={quantity <= min || disabled}
         aria-label="Decrease quantity"
       >
         <span className="sr-only">Decrease quantity</span>−
@@ -61,9 +64,9 @@ export function QuantityPicker({
 
       <button
         type="button"
-        className="flex h-full w-12 items-center justify-center text-lg transition-colors hover:bg-muted disabled:pointer-events-none disabled:opacity-50"
+        className="flex cursor-pointer h-full w-12 items-center justify-center text-lg transition-colors hover:bg-muted disabled:pointer-events-none disabled:opacity-50"
         onClick={onIncrement}
-        disabled={quantity >= max}
+        disabled={quantity >= max || disabled}
         aria-label="Increase quantity"
       >
         <span className="sr-only">Increase quantity</span>+

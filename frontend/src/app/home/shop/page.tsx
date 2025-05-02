@@ -15,7 +15,7 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Suspense } from "react";
 import { useProducts } from "@/hooks/useProducts";
-import ProductCardSkeleton from "@/components/global/ProductCardSkeleton";
+import ProductCardSkeleton from "@/components/loading/ProductCardSkeleton";
 const page = () => {
   const { data, isPending } = useProducts();
   const products = data?.products || [];
@@ -47,12 +47,27 @@ const page = () => {
             </div>
           </div>
           <div className="grid md:grid-cols-4 grid-cols-2 gap-5">
-            {!isPending && products.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-            {isPending && Array.from({ length: 8 }).map((_, index) => (
-              <ProductCardSkeleton key={index} />
-            ))}
+            {!isPending &&
+              products.length > 0 &&
+              products.map((product, index) => (
+                <ProductCard key={product._id + "product"} product={product} />
+              ))}
+            {isPending &&
+              Array.from({ length: 8 }).map((_, index) => (
+                <ProductCardSkeleton key={index + "skeleton"} />
+              ))}
+            {products.length === 0 && !isPending && (
+              <div className="col-span-4 md:h-[90vh] flex flex-col justify-center items-center ">
+                <div className="md:w-[30rem] overflow-hidden">
+                  <img
+                    src="/noData.png"
+                    className="w-full h-full object-cover"
+                    alt=""
+                  />
+                </div>
+                <p className="text-gray-500">No products found</p>
+              </div>
+            )}
           </div>
           <div className="w-full border-t border-border pt-5">
             <Suspense fallback={<div>Loading...</div>}>

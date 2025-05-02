@@ -10,27 +10,35 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Link from "next/link";
 import { ordersMockData } from "@/constants/data";
 import OrderItem from "../../global/orderItem";
-
+import { useGetOrders } from "@/hooks/useOrder";
+import MyOrdersSkeleton from "../../loading/MyOrdersSkeleton";
 const orderCard = () => {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [orders, setOrders] = useState(ordersMockData);
+  const { filteredOrders, setSearchTerm, searchTerm, isLoading, data } =
+    useGetOrders();
 
-  const filteredOrders = orders.filter(
-    (order) =>
-      order.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      order.items.some((item) =>
-        item.name.toLowerCase().includes(searchTerm.toLowerCase())
-      )
+  if (isLoading) return <MyOrdersSkeleton />;
+  const noOrder = (
+    <div className="text-center py-12">
+      <PackageOpen className="mx-auto h-12 w-12 text-gray-400 mb-4" />
+      <h3 className="text-lg font-medium">No processing orders</h3>
+      <p className="text-gray-500 mt-2">
+        You don't have any orders being processed right now
+      </p>
+    </div>
   );
+
+  const filterOrderByStatus = (status: string) => {
+    return filteredOrders.filter((order) => order.orderStatus === status)
+      .length > 0
+      ? filteredOrders
+          .filter((order) => order.orderStatus === status)
+          .map((order) => <OrderItem key={order._id} order={order} />)
+      : noOrder;
+  };
   return (
     <div className="w-full md:col-span-3 bg-gray-300/10 rounded-lg border-input border-1 py-4 mt-4 ">
-      <div className="container mx-auto px-4 py-8 flex-1">
-        {/* Breadcrumb */}
-
+      <div className=" mx-auto px-4  flex-1">
         <div className="flex flex-col md:flex-row gap-8">
-          {/* Sidebar */}
-
-          {/* Main content */}
           <div className="flex-1">
             <div className="flex justify-between items-center mb-6">
               <h1 className="text-3xl font-bold">MY ORDERS</h1>
@@ -57,76 +65,29 @@ const orderCard = () => {
               <Tabs defaultValue="all" className="w-full">
                 <TabsList className="mb-4">
                   <TabsTrigger value="all">All Orders</TabsTrigger>
-                  <TabsTrigger value="processing">Processing</TabsTrigger>
-                  <TabsTrigger value="shipped">Shipped</TabsTrigger>
-                  <TabsTrigger value="delivered">Delivered</TabsTrigger>
+                  <TabsTrigger value="PLACED">Placed</TabsTrigger>
+                  <TabsTrigger value="SHIPPED">Shipped</TabsTrigger>
+                  <TabsTrigger value="DELIVERED">Delivered</TabsTrigger>
                 </TabsList>
 
                 <TabsContent value="all" className="space-y-6">
-                  {filteredOrders.length > 0 ? (
-                    filteredOrders.map((order) => (
-                      <OrderItem key={order.id} order={order} />
-                    ))
-                  ) : (
-                    <div className="text-center py-12">
-                      <PackageOpen className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-                      <h3 className="text-lg font-medium">No orders found</h3>
-                      <p className="text-gray-500 mt-2">
-                        {searchTerm
-                          ? "Try a different search term or clear your search"
-                          : "You haven't placed any orders yet"}
-                      </p>
-                      {!searchTerm && (
-                        <Button asChild className="mt-4">
-                          <Link href="/">Start Shopping</Link>
-                        </Button>
-                      )}
-                    </div>
-                  )}
-                </TabsContent>
-
-                <TabsContent value="processing">
-                  <div className="text-center py-12">
-                    <PackageOpen className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-                    <h3 className="text-lg font-medium">
-                      No processing orders
-                    </h3>
-                    <p className="text-gray-500 mt-2">
-                      You don't have any orders being processed right now
-                    </p>
-                  </div>
-                </TabsContent>
-
-                <TabsContent value="shipped">
-                  <div className="text-center py-12">
-                    <PackageOpen className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-                    <h3 className="text-lg font-medium">No shipped orders</h3>
-                    <p className="text-gray-500 mt-2">
-                      You don't have any orders being shipped right now
-                    </p>
-                  </div>
-                </TabsContent>
-
-                <TabsContent value="delivered">
-                  {filteredOrders.filter(
-                    (order) => order.status === "Delivered"
-                  ).length > 0 ? (
-                    filteredOrders
-                      .filter((order) => order.status === "Delivered")
-                      .map((order) => (
-                        <OrderItem key={order.id} order={order} />
+                  {filteredOrders.length > 0
+                    ? filteredOrders.map((order) => (
+                        <OrderItem key={order._id} order={order} />
                       ))
-                  ) : (
-                    <div className="text-center py-12">
-                      <PackageOpen className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-                      <h3 className="text-lg font-medium">
-                        No delivered orders
-                      </h3>
-                      <p className="text-gray-500 mt-2">
-                        You don't have any delivered orders yet
-                      </p>
-                    </div>
-                  )}
+                    : noOrder}
+                </TabsContent>
+
+                <TabsContent value="PLACED" className="space-y-6">
+                  {filterOrderByStatus("PLACED")}
+                </TabsContent>
+
+                <TabsContent value="SHIPPED" className="space-y-6">
+                  {filterOrderByStatus("SHIPPED")}
+                </TabsContent>
+
+                <TabsContent value="DELIVERED" className="space-y-6">
+                  {filterOrderByStatus("DELIVERED")}
                 </TabsContent>
               </Tabs>
             </div>

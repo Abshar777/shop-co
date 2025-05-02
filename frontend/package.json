@@ -42,6 +42,7 @@
     "next-auth": "^4.24.11",
     "nextjs-toploader": "^3.7.15",
     "react": "^19.0.0",
+    "react-canvas-confetti": "^1.2.1",
     "react-day-picker": "^8.10.1",
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.56.1",

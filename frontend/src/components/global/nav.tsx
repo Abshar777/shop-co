@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { navItems } from "@/constants";
 import { Input } from "../ui/input";
@@ -16,6 +16,9 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { useRouter } from "nextjs-toploader/app";
 import AuthModal from "../page-sections/auth/authModal";
 import { useSession } from "next-auth/react";
+import { useUIStore } from "@/store/uiStore";
+import { Badge } from "../ui/badge";
+import { useGetCart } from "@/hooks/useCart";
 const MobileNavSheetContent = ({ closeDrawer }: { closeDrawer: Function }) => {
   const pathname = usePathname();
   return (
@@ -70,16 +73,25 @@ const MobileNavSheetContent = ({ closeDrawer }: { closeDrawer: Function }) => {
 const Nav = () => {
   const pathname = usePathname();
   const isMobile = useIsMobile();
-  const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [isOpen, setIsOpen] = React.useState(false);
   const closeDrawer = () => setIsOpen(false);
   const { data: session } = useSession();
   const router = useRouter();
+  const { setIsAuthModalOpen } = useUIStore();
   useEffect(() => {
     if (isOpen) {
       setIsOpen(false);
     }
   }, [pathname]);
+
+  const { data: response } = useGetCart();
+  const [cartCount, setCartCount] = useState(0);
+  useEffect(() => {
+    console.log("response", response);
+    if (response?.cart) {
+      setCartCount(response.cart.items.length);
+    }
+  }, [response]);
   return (
     <>
       <div className="w-full bg-gray-200 px-7 py-2 flex justify-between items-center">
@@ -134,14 +146,19 @@ const Nav = () => {
 
           {session?.user?.id ? (
             <>
-              <Button
-                onPress={() => router.push("/home/cart")}
-                isIconOnly
-                size="sm"
-                className="rounded-full p-1 cursor-pointer"
-              >
-                <FaCartShopping className="" />
-              </Button>
+              <div className="relative">
+                <Button
+                  onPress={() => router.push("/home/cart")}
+                  isIconOnly
+                  size="sm"
+                  className="rounded-full p-1 cursor-pointer"
+                >
+                  <FaCartShopping className="" />
+                </Button>
+                <Badge className="absolute top-0 -right-2 bg-blue-100 text-blue-800  text-xs w-4 h-4 rounded-full flex items-center justify-center">
+                  {cartCount}
+                </Badge>
+              </div>
               <Button
                 onPress={() => router.push("/home/profile")}
                 isIconOnly
@@ -153,7 +170,7 @@ const Nav = () => {
             </>
           ) : (
             <Button
-              onPress={() => setIsModalOpen(true)}
+              onPress={() => setIsAuthModalOpen(true)}
               size="sm"
               className="rounded-sm font-semibold cursor-pointer border-primary border text-sm  bg-primary/90 active:scale-95 transition-all duration-300 text-white"
             >
@@ -162,11 +179,7 @@ const Nav = () => {
           )}
         </div>
       </div>
-      <AuthModal
-        isOpen={isModalOpen}
-        closeModal={() => setIsModalOpen(false)}
-        nowProp={pathname === "/auth/login" ? "login" : "signup"}
-      />
+      <AuthModal nowProp={"login"} />
     </>
   );
 };

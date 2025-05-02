@@ -1,14 +1,12 @@
 "use client";
 
 import { cn } from "@/lib/utils";
+import { ISize } from "@/types/IProduct";
 
-export interface SizeOption {
-  id: string;
-  name: string;
-}
+
 
 interface SizeSelectorProps {
-  sizes: SizeOption[];
+  sizes: ISize[];
   selectedSize: string;
   onSelectSize: (sizeId: string) => void;
   className?: string;
@@ -26,16 +24,16 @@ export function SizeSelector({
       <div className="flex flex-wrap gap-2">
         {sizes.map((size) => (
           <button
-            key={size.id}
+            key={size.size}
             className={cn(
               "flex py-2 cursor-pointer min-w-20 items-center justify-center rounded-full px-4 transition-all",
-              selectedSize === size.id
+              selectedSize === size.size
                 ? "bg-primary text-primary-foreground"
                 : "bg-gray-300/60 text-secondary-foreground hover:scale-105 active:scale-95 transition-all duration-300"
             )}
-            onClick={() => onSelectSize(size.id)}
+            onClick={() => onSelectSize(size.size)}
           >
-            {size.name}
+            {size.size}
           </button>
         ))}
       </div>

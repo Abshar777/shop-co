@@ -15,7 +15,7 @@ export class UserRepository extends BaseRepository<IUserDocument> {
     }
 
     async getUsersByRole(role: Roles): Promise<IUserDocument[]> {
-        return await this.model.find({ role });
+        return await this.model.find({ role }).select("-password");
     }
 }
 

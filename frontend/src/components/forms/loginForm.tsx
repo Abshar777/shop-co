@@ -6,19 +6,22 @@ import AnimatedButton from "../animation/animatedButton";
 import { Form, FormField } from "../ui/form";
 import FormGeneratorV2 from "../global/formgenrator";
 import { FaEnvelope, FaLock } from "react-icons/fa6";
-
+import { useUIStore } from "@/store/uiStore";
 export function LoginForm({ callBack }: { callBack?: () => void }) {
   const { form,control, errors, onFormSubmit, isPending, isSuccess } = useAuth();
+  const {previewsFunction} = useUIStore()
   const [err, seterr] = useState<string | null>(null);
   useEffect(() => {
-    if (isSuccess) {
+    if (isSuccess&&!isPending) {
       seterr(null);
+      previewsFunction();
+      console.log("previewsFunction",previewsFunction);
       // callBack?.();
     }
     Object.values(errors).map(
       (e: any, i) => i == 0 && seterr(e?.message as string)
     );
-  }, [errors, isSuccess]);
+  }, [errors, isSuccess,isPending]);
 
   return (
     <Form {...form}>

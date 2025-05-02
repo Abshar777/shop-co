@@ -11,22 +11,22 @@ export class OrderRepository {
 
 
     async getOrders(): Promise<IOrderDocument[]> {
-        return await this.orderModel.find();
+        return await this.orderModel.find().populate("products.product");
     }
 
     async getOrdersByUserId(userId: string): Promise<IOrderDocument[]> {
-        return await this.orderModel.find({ userId });
+        return await this.orderModel.find({ userId }).populate("products.product");
     }
 
     async getOrderById(orderId: string): Promise<IOrderDocument | null> {
-        return await this.orderModel.findById(orderId);
+        return await this.orderModel.findById(orderId).populate("products.product");
     }
 
     async createOrder(order: Partial<IOrder>): Promise<IOrderDocument> {
         return await this.orderModel.create(order);
     }
 
-    async updateOrder(orderId: string, order:UpdateQuery<IOrderDocument>): Promise<IOrderDocument | null> {
+    async updateOrder(orderId: string, order: UpdateQuery<IOrderDocument>): Promise<IOrderDocument | null> {
         return await this.orderModel.findByIdAndUpdate(orderId, order, { new: true });
     }
 

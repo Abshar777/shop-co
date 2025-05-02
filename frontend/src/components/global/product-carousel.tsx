@@ -15,14 +15,20 @@ import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
 import ProductCard from "./productCard";
 import { IProduct } from "@/types";
+import ProductCardSkeleton from "../loading/ProductCardSkeleton";
+import { useRouter } from "nextjs-toploader/app";
 
 // Product data
 
-
 interface ProductCarouselProps {
   products: IProduct[];
+  isLoading: boolean;
 }
-export default function ProductCarousel({ products }: ProductCarouselProps) {
+export default function ProductCarousel({
+  products,
+  isLoading,
+}: ProductCarouselProps) {
+  const router = useRouter();
   const isMobile = useIsMobile();
 
   const getItemsPerView = () => {
@@ -41,28 +47,43 @@ export default function ProductCarousel({ products }: ProductCarouselProps) {
   return (
     <div className="relative">
       <Carousel
-        className="md:w-full w-[90vw]"
+        className="  w-[90vw]"
         opts={{
           align: "start",
           loop: true,
         }}
       >
         <CarouselContent>
-          {products.map((product) => (
-            <CarouselItem
-              key={product.id}
-              className=" basis-1/2 lg:basis-1/4"
-            >
-              <ProductCard product={product} />
-            </CarouselItem>
-          ))}
+          {!isLoading &&
+            products.map((product) => (
+              <CarouselItem
+                key={product._id}
+                className=" basis-1/2 shrink-0  lg:basis-1/4"
+              >
+                <ProductCard product={product} />
+              </CarouselItem>
+            ))}
+
+          {isLoading &&
+            Array.from({ length: 8 }).map((_, index) => (
+              <CarouselItem
+                key={index}
+                className="shrink-0 basis-1/2 lg:basis-1/4"
+              >
+                <ProductCardSkeleton />
+              </CarouselItem>
+            ))}
         </CarouselContent>
         <CarouselPrevious className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2" />
         <CarouselNext className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2" />
       </Carousel>
 
       <div className="mt-8 flex justify-center">
-        <Button variant="outline" className="rounded-full px-8">
+        <Button
+          onClick={() => router.push("/home/shop")}
+          variant="outline"
+          className="rounded-full px-8 active:scale-95 transition-all duration-300"
+        >
           View All
         </Button>
       </div>

@@ -17,15 +17,19 @@ export class CartUsecase {
             throw new Error("Product not found");
         }
         const cart = await this.cartRepository.getCartByUserId(userId);
+
         if (!cart) {
-            throw new Error("Cart not found");
+            return await this.cartRepository.upsertCart(userId, productId.toString(), size, quantity);
         }
-        const productExist = cart.items.find((item) => item.product.toString() === productId.toString() && item.size === size);
+
+        const productExist = cart.items.find((item) => (item.product._id as string).toString() === productId.toString() && item.size === size);
+
         if (productExist) {
-            productExist.quantity += quantity;
+            return await this.updateCartItem(userId, productId, size, quantity);
         } else {
-            cart.items.push({ product: product, size, quantity });
+            cart.items.push({ product: productId as unknown as any, size, quantity });
         }
+
         return await cart.save();
     }
 
@@ -47,11 +51,13 @@ export class CartUsecase {
     }
 
     async updateCartItem(userId: string, productId: Types.ObjectId, size: string, quantity: number) {
+
         const cart = await this.cartRepository.getCartByUserId(userId);
         if (!cart) {
             throw new Error("Cart not found");
         }
-        cart.items = cart.items.map((item) => item.product.toString() === productId.toString() && item.size === size ? { ...item, quantity } : item);
+        cart.items = cart.items.map((item) => (item.product._id as string).toString() === productId.toString() && item.size === size ? { ...item, quantity } : item);
+        console.log("cart on updateQty", cart);
         return await cart.save();
     }
 
@@ -59,6 +65,6 @@ export class CartUsecase {
         const cart = await this.cartRepository.getCartByUserId(userId);
         return cart?.items.reduce((acc, item) => acc + item.quantity * item.product.price, 0);
     }
-}   
+}
 
 export default new CartUsecase();

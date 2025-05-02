@@ -23,6 +23,7 @@ export class UserUsecase {
         }
         const accessToken = this.jwtService.generateAccessToken({ userId: user._id });
         const refreshToken = this.jwtService.generateRefreshToken({ userId: user._id });
+
         return { user, accessToken, refreshToken };
     }
 

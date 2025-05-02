@@ -1,5 +1,6 @@
-import { IProduct } from ".";
-import { IUser } from "./IUser";
+import { IProduct } from "@/types/IProduct";
+import { IUser } from "@/types/IUser";
+import { IOrder } from "./IOrder";
 
 export interface IApiResponse {
     success: boolean;
@@ -20,4 +21,14 @@ export interface IProductByIdResponse {
     product: IProduct
 }
 
+export interface IOrderResponse {
+    message: string,
+    orders: IOrder[]
+}
+
+
+export interface IOrderByIdResponse {
+    message: string,
+    order: IOrder
+}
 

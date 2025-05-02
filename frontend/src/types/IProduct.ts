@@ -1,4 +1,5 @@
 export interface IProduct {
+    _id: string;
     name: string;
     description: string;
     price: number;
@@ -7,6 +8,9 @@ export interface IProduct {
     images: string[];
     createdAt: Date;
     updatedAt: Date;
+    rating: number;
+    discount: number;
+    originalPrice: number;
 }
 
 

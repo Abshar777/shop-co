@@ -23,6 +23,7 @@ export class AuthController {
      * @Response 200 - User logged in successfully
      * @Response 400 - Email and password are required
      * @Response 500 - Internal server error
+     * @ResponseJson {success: boolean, message: string, user: User, accessToken: string, refreshToken: string}
      */
     async login(req: Request, res: Response, next: NextFunction) {
         try {
@@ -58,6 +59,7 @@ export class AuthController {
      * @Response 201 - User registered successfully
      * @Response 400 - Email, password and name are required
      * @Response 500 - Internal server error
+     * @ResponseJson {success: boolean, message: string, user: User, accessToken: string, refreshToken: string}
      */
     async register(req: Request, res: Response, next: NextFunction) {
         try {
