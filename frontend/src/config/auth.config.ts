@@ -17,7 +17,7 @@ export const authConfig: AuthOptions = {
                     console.log("Email and name and id are required.");
                     return null;
                 }
-                
+
                 const user: User = {
                     id: credentials.id,
                     name: credentials.name,
@@ -34,16 +34,13 @@ export const authConfig: AuthOptions = {
     },
     callbacks: {
         jwt({ token, user }) {
-            console.log("jwt callback", { token, user });
-            
-            // Only update the token when user is passed (on sign in)
             if (user) {
                 token.id = user.id;
                 token.token = user.token;
                 token.name = user.name;
                 token.email = user.email;
             }
-            
+
             return token;
         },
         redirect({ url, baseUrl }) {
@@ -51,13 +48,13 @@ export const authConfig: AuthOptions = {
             return url.startsWith(baseUrl) ? url : `${baseUrl}/`;
         },
         session({ session, token }) {
-            console.log("session callback", { session, token });
-            
+
+
             session.user.token = token.token as string;
             session.user.id = token.id as string;
             session.user.name = token.name as string;
             session.user.email = token.email as string;
-            
+
             return session;
         },
     },

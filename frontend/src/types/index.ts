@@ -11,7 +11,7 @@ export interface IProduct {
   originalPrice: number;
   rating: number;
   discount: number;
-  image: string;
+  images: string[];
 };
 
 export interface Testimonial {

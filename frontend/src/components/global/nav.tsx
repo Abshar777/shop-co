@@ -75,9 +75,7 @@ const Nav = () => {
   const closeDrawer = () => setIsOpen(false);
   const { data: session } = useSession();
   const router = useRouter();
-  console.log(session, "session");
   useEffect(() => {
-    console.log(isOpen, "isOpen");
     if (isOpen) {
       setIsOpen(false);
     }

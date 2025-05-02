@@ -7,24 +7,25 @@ import React from "react";
 import { useRouter } from "nextjs-toploader/app";
 
 interface ProductCardProps {
-    product: IProduct;
+  product: IProduct;
 }
-
-
-
-
-
 
 const ProductCard = ({ product }: ProductCardProps) => {
   const router = useRouter();
+  const image = product.images[0].startsWith("/")
+    ? process.env.NEXT_PUBLIC_BACKEND_URL + product.images[0]
+    : product.images[0];
+  console.log(image);
   return (
-    <div onClick={() => router.push(`/home/shop/${product.id}`)} className="bg-gray-200/50 hover:bg-gray-400/20 transition-all cursor-pointer hover:scale-95 duration-300 rounded-lg p-1 h-full flex flex-col">
+    <div
+      onClick={() => router.push(`/home/shop/${product.id}`)}
+      className="bg-gray-200/50 hover:bg-gray-400/20 transition-all cursor-pointer hover:scale-95 duration-300 rounded-lg p-1 h-full flex flex-col"
+    >
       <div className="relative mb-4 w-full aspect-square">
         <Image
-          src={product.image || "/placeholder.svg"}
+          src={image || "/placeholder.svg"}
           alt={product.name}
           fill
-       
           className="object-cover rounded-lg"
         />
       </div>

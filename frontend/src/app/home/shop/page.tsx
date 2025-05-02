@@ -14,7 +14,11 @@ import {
 } from "@/components/ui/drawer";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Suspense } from "react";
+import { useProducts } from "@/hooks/useProducts";
+import ProductCardSkeleton from "@/components/global/ProductCardSkeleton";
 const page = () => {
+  const { data, isPending } = useProducts();
+  const products = data?.products || [];
   return (
     <div className="w-full py-5 md:px-8 px-5">
       <Breadcrumbs />
@@ -27,7 +31,7 @@ const page = () => {
             <h1 className="text-2xl font-bold">All Products</h1>
             <div className="flex items-center gap-2">
               <p className="text-sm text-gray-500">
-                {products.length}&nbsp;products&nbsp;found
+                {products?.length || 0}&nbsp;products&nbsp;found
               </p>
               <Drawer>
                 <DrawerTrigger className="bg-gray-300/30 md:hidden flex cursor-pointer rounded-full hover:scale-105 transition-all duration-300 border-input border-1 p-1">
@@ -43,8 +47,11 @@ const page = () => {
             </div>
           </div>
           <div className="grid md:grid-cols-4 grid-cols-2 gap-5">
-            {products.map((product) => (
+            {!isPending && products.map((product) => (
               <ProductCard key={product.id} product={product} />
+            ))}
+            {isPending && Array.from({ length: 8 }).map((_, index) => (
+              <ProductCardSkeleton key={index} />
             ))}
           </div>
           <div className="w-full border-t border-border pt-5">

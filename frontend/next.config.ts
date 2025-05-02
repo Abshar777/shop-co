@@ -6,6 +6,10 @@ const nextConfig: NextConfig = {
       {
         hostname: "images.pexels.com",
       },
+      {
+        hostname: "localhost",
+        protocol: "http",
+      },
     ],
   },
   typescript: {
