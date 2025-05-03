@@ -1,6 +1,7 @@
 import { IProduct } from "@/types/IProduct";
 import { IUser } from "@/types/IUser";
 import { IOrder } from "./IOrder";
+import { IAddress } from "./IOrder";
 
 export interface IApiResponse {
     success: boolean;
@@ -38,3 +39,8 @@ export interface ICategoryResponse {
     categories: string[]
 }
 
+
+export interface IPreviousAddressResponse {
+    message: string,
+    address: IAddress[]
+}

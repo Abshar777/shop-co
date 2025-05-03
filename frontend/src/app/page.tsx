@@ -13,12 +13,7 @@ import { IProduct } from "@/types/IProduct";
 export default function Home() {
   const { data, isPending } = useProducts();
   const products = data?.products || [];
-  const [featuredProducts, setFeaturedProducts] = useState<IProduct[]>([]);
-  const [topSellingProducts, setTopSellingProducts] = useState<IProduct[]>([]);
-  useEffect(() => {
-    setFeaturedProducts(products.slice(0, 5));
-    setTopSellingProducts(products.slice(5, 10));
-  }, [products]);
+
   return (
     <>
       <Hero />
@@ -26,12 +21,12 @@ export default function Home() {
     {  <ProductSctions
         isLoading={isPending}
         title="Featured Products"
-        products={featuredProducts}
+        products={products.slice(0, 5)}
       />}
       <ProductSctions
         isLoading={isPending}
         title="Top Selling Products"
-        products={topSellingProducts}
+        products={products.slice(5, 10)}
       />
       <Categorys />
       <Testimonials title="Testimonials" testimonials={testimonials} />

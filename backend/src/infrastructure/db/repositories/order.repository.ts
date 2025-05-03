@@ -11,15 +11,15 @@ export class OrderRepository {
 
 
     async getOrders(): Promise<IOrderDocument[]> {
-        return await this.orderModel.find().populate("products.product");
+        return await this.orderModel.find().populate("products.product").populate("deliveryBoy").populate("userId");
     }
 
     async getOrdersByUserId(userId: string): Promise<IOrderDocument[]> {
-        return await this.orderModel.find({ userId }).populate("products.product");
+        return await this.orderModel.find({ userId }).populate("products.product").populate("deliveryBoy").populate("userId");
     }
 
     async getOrderById(orderId: string): Promise<IOrderDocument | null> {
-        return await this.orderModel.findById(orderId).populate("products.product");
+        return await this.orderModel.findById(orderId).populate("products.product").populate("deliveryBoy").populate("userId");
     }
 
     async createOrder(order: Partial<IOrder>): Promise<IOrderDocument> {
@@ -37,15 +37,15 @@ export class OrderRepository {
 
 
     async getOrderByStatus(status: string): Promise<IOrderDocument[]> {
-        return await this.orderModel.find({ status });
+        return await this.orderModel.find({ status }).populate("products.product").populate("deliveryBoy").populate("userId");
     }
 
     async getOderByDeliveryBoy(deliveryBoy: string): Promise<IOrderDocument[]> {
-        return await this.orderModel.find({ deliveryBoy });
+        return await this.orderModel.find({ deliveryBoy }).populate("products.product").populate("deliveryBoy").populate("userId");
     }
 
     async getOderByDeliveryBoyAndStatus(deliveryBoy: string, status: string): Promise<IOrderDocument[]> {
-        return await this.orderModel.find({ deliveryBoy, status });
+        return await this.orderModel.find({ deliveryBoy, status }).populate("products.product").populate("deliveryBoy").populate("userId");
     }
 
 

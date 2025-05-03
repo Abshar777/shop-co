@@ -12,6 +12,9 @@ import path from 'path';
 import productRoutes from '../presentation/routes/product.route';
 import cartRoutes from '../presentation/routes/cart.route';
 import orderRoutes from '../presentation/routes/order.route';
+import deliveryBoyRoutes from '../presentation/routes/deliveryBoy.route';
+import adminRoutes from '../presentation/routes/admin.route';
+
 dotenv.config();
 const app = express();
 
@@ -25,7 +28,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // -------------------- security middleware-------------------------------
 app.use(cors({
-    origin: process.env.FRONTEND_URL,
+    origin: [process.env.FRONTEND_URL as string, process.env.ADMIN_URL as string],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
 }));
@@ -43,6 +46,8 @@ app.use(apiRoutes.AUTH, authRoutes);
 app.use(apiRoutes.PRODUCT, productRoutes);
 app.use(apiRoutes.CART, cartRoutes);
 app.use(apiRoutes.ORDER, orderRoutes);
+app.use(apiRoutes.DELIVERY_BOY, deliveryBoyRoutes);
+app.use(apiRoutes.ADMIN, adminRoutes);
 
 
 // -------------------------  error middleware-------------------------------

@@ -25,3 +25,9 @@ export const getOrderById = async (token: string, id: string) => {
     return response.data;
 };
 
+
+export const getPreviousAddress = async (token: string) => {
+    const response = await AxiosInstance(token).get(ORDER_URL + "/previous-address");
+    return response.data;
+};
+

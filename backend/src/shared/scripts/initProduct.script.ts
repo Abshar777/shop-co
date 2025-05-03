@@ -1,5 +1,3 @@
-import connectDB from "../../config/db.config";
-import ProductModel from "../../infrastructure/db/models/product.model";
 import { ProductRepository } from "../../infrastructure/db/repositories/product.repository";
 
 const data = [
@@ -15,7 +13,6 @@ const data = [
 ];
 
 
-// sizes availbele 
 
 
 

@@ -3,7 +3,7 @@ import connectDB from '../config/db.config';
 import { PORT } from '../shared/constants';
 import { config } from 'dotenv';
 import initProduct from '../shared/scripts/initProduct.script';
-
+import {initAdmin} from '../shared/scripts/initAdmin';
 process.on("uncaughtException", (err) => {
     console.log(err);
     console.log("UNCAUGHT Exception! Shutting down ...");
@@ -16,6 +16,7 @@ async function main() {
     config();
     await connectDB();
     await initProduct();
+    await initAdmin();
 }
 
 

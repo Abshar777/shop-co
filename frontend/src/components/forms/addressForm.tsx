@@ -31,7 +31,8 @@ import { Button } from "@heroui/button";
 import { Control, FieldErrors, UseFormReturn } from "react-hook-form";
 
 const AddressForm = ({ form, onFormSubmit, control, errors, formRef }: { form: UseFormReturn<any>, onFormSubmit: (data: any) => void, control: Control<any>, errors: FieldErrors<any>, formRef: RefObject<HTMLFormElement> }) => {
-  
+  const { previousAddressData, previousAddressLoading } = useOrder();
+  const addresses = previousAddressData?.address || [];
   const isMobile = useIsMobile();
   return (
     <div className="w-full   ">
@@ -50,8 +51,8 @@ const AddressForm = ({ form, onFormSubmit, control, errors, formRef }: { form: U
           {!isMobile && (
             <Select
               onValueChange={(value) => {
-                const address = recentAddresses.find(
-                  (address) => address.id.toString() === value
+                const address = addresses.find(
+                  (address) => address.address.toString() === value
                 );
                 if (address) {
                   form.setValue("address", address.address);
@@ -66,8 +67,8 @@ const AddressForm = ({ form, onFormSubmit, control, errors, formRef }: { form: U
                 <SelectValue placeholder="Select Address" />
               </SelectTrigger>
               <SelectContent className="bg-muted-foreground/10 backdrop-blur-sm">
-                {recentAddresses.map((address) => (
-                  <SelectItem key={address.id} value={address.id.toString()}>
+                {addresses.map((address) => (
+                  <SelectItem key={address.address} value={address.address.toString()}>
                     {address.address}
                   </SelectItem>
                 ))}
@@ -83,9 +84,9 @@ const AddressForm = ({ form, onFormSubmit, control, errors, formRef }: { form: U
                 <DrawerTitle className="text-center py-2">Recent Addresses</DrawerTitle>
                 {/* <ScrollArea className="h-[calc(60vh-10rem)] p-3"> */}
                 <div className="p-3 flex flex-col gap-3">
-                  {recentAddresses.map((address) => (
+                  {addresses.map((address) => (
                     <Button
-                      key={address.id}
+                      key={address.address}
                       variant="bordered"
                       className="w-full bg-muted-foreground/10 rounded-lg cursor-pointer"
                     >

@@ -3,7 +3,7 @@ import { addressSchema } from "@/schema/address.schema"
 import { useZodFormV2 } from "./useZodForm"
 import { useGetCart } from "./useCart";
 import { useSession } from "next-auth/react";
-import { createOrder, getOrderById } from "@/api/order";
+import { createOrder, getOrderById, getPreviousAddress } from "@/api/order";
 import { useEffect, useRef, useState } from "react";
 import { useMutationData } from "./useMutation";
 import { toast } from "sonner";
@@ -11,7 +11,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "nextjs-toploader/app";
 import { getOrdersByUserId } from "@/api/order";
 import { useQueryData } from "./useQueryData";
-import { IOrderByIdResponse, IOrderResponse } from "@/types/api";
+import { IOrderByIdResponse, IOrderResponse, IPreviousAddressResponse } from "@/types/api";
 import { IOrder } from "@/types/IOrder";
 
 
@@ -21,6 +21,7 @@ export const useOrder = () => {
     const client = useQueryClient()
     const router = useRouter();
     const token = session?.user?.token || "";
+    const { data: previousAddress, isLoading: previousAddressLoading } = useQueryData(['previousAddress'], () => getPreviousAddress(token));
     const { data: response, isLoading } = useGetCart();
     const formRef = useRef<HTMLFormElement>(null);
     const { mutate: createOrderMutation, reset } = useMutationData(['order'], (data: any) => createOrder(data, token), ['cart'], async (data: any) => {
@@ -46,7 +47,9 @@ export const useOrder = () => {
             formRef.current.requestSubmit();
         }
     };
-    return { form, onFormSubmit, control, errors, formRef, handleCheckout }
+
+    const previousAddressData = previousAddress as IPreviousAddressResponse
+    return { form, onFormSubmit, control, errors, formRef, handleCheckout, previousAddressData, previousAddressLoading }
 }
 
 

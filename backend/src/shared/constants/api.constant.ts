@@ -26,4 +26,6 @@ export const apiRoutes={
     PRODUCT:"/api/products",
     CART:"/api/cart",
     ORDER:"/api/orders",
+    DELIVERY_BOY:"/api/delivery-boy",
+    ADMIN:"/api/admin",
 }
