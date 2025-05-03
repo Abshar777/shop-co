@@ -36,7 +36,7 @@ export const authMiddilware = async (req: AuthRequest, res: Response, next: Next
         req.role = user.role;
         next();
     } catch (error) {
-        console.log('error', (error as Error).message) 
+        console.log('error', (error as Error).message)
         res.status(statusCodes.UNAUTHORIZED).json({ message: "user token is expired" })
 
     }

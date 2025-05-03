@@ -28,4 +28,5 @@ export const apiRoutes={
     ORDER:"/api/orders",
     DELIVERY_BOY:"/api/delivery-boy",
     ADMIN:"/api/admin",
+    NOTIFICATION:"/api/notifications",
 }

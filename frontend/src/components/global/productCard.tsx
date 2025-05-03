@@ -23,7 +23,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
     product.images?.length && product.images[0].startsWith("/")
       ? process.env.NEXT_PUBLIC_BACKEND_URL + product.images[0]
       : product.images[0];
-  const [imageLoading, setImageLoading] = useState(true);
+  const [imageLoading, setImageLoading] = useState(false);
 
   const handleImageLoad = async () => {
     try {
@@ -41,9 +41,9 @@ const ProductCard = ({ product }: ProductCardProps) => {
     mutate({ productId: product._id, size: product.sizes[0].size, quantity: 1 });
   };
 
-  useEffect(() => {
-    handleImageLoad();
-  }, []);
+  // useEffect(() => {
+  //   handleImageLoad();
+  // }, []);
 
   return (
     <div
@@ -62,7 +62,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
           />
         )}
       </div>
-      <div className="w-full p-1  grid grid-cols-2 gap-2">
+      <div className="w-full p-1  grid grid-cols-1 md:grid-cols-2 gap-2">
         <div className="col-span-1">
           <h3 className="font-medium text-lg mb-2">{product.name}</h3>
           <div className="flex items-center mb-2">
@@ -98,7 +98,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
             )}
           </div>
         </div>
-        <div className="col-span-1 flex items-center justify-end">
+        <div className="col-span-1 md:flex hidden items-center justify-end">
           <Button
             onPress={handleAddToCart}
             size="sm"

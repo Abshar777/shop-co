@@ -17,7 +17,7 @@ export default function Providers({
 }) {
   return (
     <>
-      <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
+      <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
         <SessionProvider session={session}>
           <ReactQueryProvider>
             <HeroUIProvider>{children}</HeroUIProvider>

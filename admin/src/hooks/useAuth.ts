@@ -25,7 +25,11 @@ export const useAuth = (type: "login" | "signup" = "login") => {
     if (isPending) {
       setIsLoading(true)
     }
-  }, [isPending])
+    if (mutationError) {
+      setIsLoading(false)
+    }
+  }, [isPending, mutationError])
+
 
   const form = useZodForm(schema, mutate);
   const { register, onFormSubmit, errors, reset, getValues, setValue } = form;

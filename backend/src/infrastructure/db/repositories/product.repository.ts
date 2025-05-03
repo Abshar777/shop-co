@@ -41,7 +41,6 @@ export class ProductRepository extends BaseRepository<IProductDocument> {
     }
 
     async getCategories() {
-        console.log("getCategories");
         return await this.model.find({}).distinct("category");
     }
 

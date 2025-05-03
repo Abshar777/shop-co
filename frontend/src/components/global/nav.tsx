@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { navItems } from "@/constants";
 import { Input } from "../ui/input";
-import { IoCloseCircle, IoSearch } from "react-icons/io5";
+import { IoCloseCircle, IoNotifications, IoSearch } from "react-icons/io5";
 import { IoIosArrowDroprightCircle } from "react-icons/io";
 import { Button } from "@heroui/button";
 import { FaCartShopping } from "react-icons/fa6";
@@ -12,13 +12,42 @@ import { FaBars } from "react-icons/fa";
 import { usePathname } from "next/navigation";
 import { Drawer } from "vaul";
 import { cn } from "@/lib/utils";
-import { useIsMobile } from "@/hooks/use-mobile";
-import { useRouter } from "nextjs-toploader/app";
-import AuthModal from "../page-sections/auth/authModal";
-import { useSession } from "next-auth/react";
-import { useUIStore } from "@/store/uiStore";
 import { Badge } from "../ui/badge";
-import { useGetCart } from "@/hooks/useCart";
+import NotificationsDrawer from "./notifications-drawer";
+import { useNav } from "@/hooks/useNav";
+import AuthModal from "../page-sections/auth/authModal";
+// Mock notification data
+const mockNotifications = [
+  {
+    id: 1,
+    title: "Order Shipped",
+    message: "Your order #12345 has been shipped and is on its way!",
+    time: "5 minutes ago",
+    read: false,
+  },
+  {
+    id: 2,
+    title: "Special Offer",
+    message: "Get 20% off on all summer collection items!",
+    time: "2 hours ago",
+    read: false,
+  },
+  {
+    id: 3,
+    title: "Cart Reminder",
+    message: "You have items waiting in your cart. Complete your purchase now!",
+    time: "1 day ago",
+    read: true,
+  },
+  {
+    id: 4,
+    title: "Order Delivered",
+    message: "Your order #10987 has been delivered successfully.",
+    time: "3 days ago",
+    read: true,
+  },
+];
+
 const MobileNavSheetContent = ({ closeDrawer }: { closeDrawer: Function }) => {
   const pathname = usePathname();
   return (
@@ -71,27 +100,19 @@ const MobileNavSheetContent = ({ closeDrawer }: { closeDrawer: Function }) => {
   );
 };
 const Nav = () => {
-  const pathname = usePathname();
-  const isMobile = useIsMobile();
-  const [isOpen, setIsOpen] = React.useState(false);
-  const closeDrawer = () => setIsOpen(false);
-  const { data: session } = useSession();
-  const router = useRouter();
-  const { setIsAuthModalOpen } = useUIStore();
-  useEffect(() => {
-    if (isOpen) {
-      setIsOpen(false);
-    }
-  }, [pathname]);
-
-  const { data: response } = useGetCart();
-  const [cartCount, setCartCount] = useState(0);
-  useEffect(() => {
-    console.log("response", response);
-    if (response?.cart) {
-      setCartCount(response.cart.items.length);
-    }
-  }, [response]);
+  const {
+    isOpen,
+    setIsOpen,
+    closeDrawer,
+    cartCount,
+    isNotificationsOpen,
+    setIsNotificationsOpen,
+    pathname,
+    session,
+    router,
+    setIsAuthModalOpen,
+    notification,
+  } = useNav();
   return (
     <>
       <div className="w-full bg-gray-200 px-7 py-2 flex justify-between items-center">
@@ -159,6 +180,22 @@ const Nav = () => {
                   {cartCount}
                 </Badge>
               </div>
+              <div className="relative">
+                <Button
+                  onPress={() => setIsNotificationsOpen(true)}
+                  isIconOnly
+                  size="sm"
+                  className="rounded-full p-1 cursor-pointer"
+                >
+                  <IoNotifications className="" />
+                </Button>
+                <Badge className="absolute top-0 -right-2 bg-blue-100 text-blue-800 text-xs w-4 h-4 rounded-full flex items-center justify-center">
+                  {notification
+                    ? notification.filter((n) => !n.read).length
+                    : 0}
+                </Badge>
+              </div>
+
               <Button
                 onPress={() => router.push("/home/profile")}
                 isIconOnly
@@ -180,6 +217,11 @@ const Nav = () => {
         </div>
       </div>
       <AuthModal nowProp={"login"} />
+      <NotificationsDrawer
+        isOpen={isNotificationsOpen}
+        setIsOpen={setIsNotificationsOpen}
+        notifications={notification}
+      />
     </>
   );
 };

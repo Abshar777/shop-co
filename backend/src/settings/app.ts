@@ -14,6 +14,7 @@ import cartRoutes from '../presentation/routes/cart.route';
 import orderRoutes from '../presentation/routes/order.route';
 import deliveryBoyRoutes from '../presentation/routes/deliveryBoy.route';
 import adminRoutes from '../presentation/routes/admin.route';
+import notificationRoutes from '../presentation/routes/notification.route';
 
 dotenv.config();
 const app = express();
@@ -48,7 +49,7 @@ app.use(apiRoutes.CART, cartRoutes);
 app.use(apiRoutes.ORDER, orderRoutes);
 app.use(apiRoutes.DELIVERY_BOY, deliveryBoyRoutes);
 app.use(apiRoutes.ADMIN, adminRoutes);
-
+app.use(apiRoutes.NOTIFICATION, notificationRoutes);
 
 // -------------------------  error middleware-------------------------------
 app.use(notFound);

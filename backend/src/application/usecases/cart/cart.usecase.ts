@@ -57,7 +57,7 @@ export class CartUsecase {
             throw new Error("Cart not found");
         }
         cart.items = cart.items.map((item) => (item.product._id as string).toString() === productId.toString() && item.size === size ? { ...item, quantity } : item);
-        console.log("cart on updateQty", cart);
+       
         return await cart.save();
     }
 

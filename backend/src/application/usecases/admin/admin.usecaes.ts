@@ -5,17 +5,20 @@ import JwtService from "../../../shared/utils/jwt";
 import { Roles } from "../../../domain/types/user.type";
 import { OrderRepository } from "../../../infrastructure/db/repositories/order.repository";
 import { IOrderDocument } from "../../../domain/interfaces/order.interface";
-
+import { NotificationRepository } from "../../../infrastructure/db/repositories/notification.repository";
+import { NotificationUsecase } from "../notification/notification.usecase";
 export class AdminUsecase {
     private readonly userRepository: UserRepository;
     private readonly jwtService: IJwtService;
     private readonly orderRepository: OrderRepository;
-
-
+    private readonly notificationRepository: NotificationRepository;
+    private readonly notificationUsecase: NotificationUsecase
     constructor() {
         this.userRepository = new UserRepository();
         this.jwtService = new JwtService();
         this.orderRepository = new OrderRepository();
+        this.notificationRepository = new NotificationRepository();
+        this.notificationUsecase = new NotificationUsecase();
     }
 
     async getUsersByRole(role: Roles): Promise<IUserDocument[]> {
@@ -28,6 +31,14 @@ export class AdminUsecase {
             throw new Error("User not found");
         }
         user.verified = status;
+        // WIREUP: socket io to send notification to the user
+        await this.notificationUsecase.createNotification({
+            userId: user._id as string,
+            title: "User Verified",
+            message: "Your account has been verified",
+            type: "VERIFICATION",
+            read: false
+        })
         return await this.userRepository.updateById(userId, user);
     }
 

@@ -5,6 +5,7 @@ import { Toaster } from "sonner";
 import NextTopLoader from "nextjs-toploader";
 import ReactQueryProvider from "./react-query";
 import { SessionProvider, SessionProviderProps } from "next-auth/react";
+import SocketProvider from "./socketProvider";
 
 const Provider = ({
   children,
@@ -17,22 +18,24 @@ const Provider = ({
     <>
       <SessionProvider session={session}>
         <ReactQueryProvider>
-          <NextTopLoader
-            height={2}
-            shadow="0 0 10px white"
-            color="white"
-            showSpinner={false}
-            zIndex={999999999999999}
-          />
-          <HeroUIProvider>
-            <Toaster
-              visibleToasts={1}
-              position="bottom-center"
-              richColors
-              theme="light"
+          <SocketProvider>
+            <NextTopLoader
+              height={2}
+              shadow="0 0 10px white"
+              color="white"
+              showSpinner={false}
+              zIndex={999999999999999}
             />
-            {children}
-          </HeroUIProvider>
+            <HeroUIProvider>
+              <Toaster
+                visibleToasts={1}
+                position="bottom-center"
+                richColors
+                theme="light"
+              />
+              {children}
+            </HeroUIProvider>
+          </SocketProvider>
         </ReactQueryProvider>
       </SessionProvider>
     </>

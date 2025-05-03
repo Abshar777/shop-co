@@ -1,4 +1,4 @@
-import { FilterQuery, Model } from "mongoose";
+import { FilterQuery, Model, UpdateQuery } from "mongoose";
 
 
 export class BaseRepository<T> {
@@ -14,6 +14,10 @@ export class BaseRepository<T> {
 
     async findById(id: string): Promise<T | null> {
         return this.model.findById(id);
+    }
+
+    async findByUserId(userId: string): Promise<T | null> {
+        return this.model.findOne({userId});
     }
 
     async create(data: Partial<T>): Promise<T> {
@@ -37,6 +41,11 @@ export class BaseRepository<T> {
 
     async deleteById(id: string): Promise<T | null> {
         return this.model.findByIdAndDelete(id);
+    }
+
+
+    async upsert(filter: FilterQuery<T>, data: UpdateQuery<T>): Promise<T | null> {
+        return this.model.findOneAndUpdate(filter, data, { new: true, upsert: true });
     }
  
 

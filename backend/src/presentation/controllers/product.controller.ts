@@ -92,7 +92,7 @@ export class ProductController {
     async getAvailableCategories(req: Request, res: Response, next: NextFunction) {
         try {
             const categories = await this.productUsecase.getAvailableCategories();
-            console.log("categories", categories);
+           
             res.status(statusCodes.OK).json({ message: "Categories fetched successfully", categories });
         } catch (error) {
             console.log("error on categories", error);
