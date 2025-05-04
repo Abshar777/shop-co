@@ -4,5 +4,7 @@ node_modules
 .env.development
 .env.production
 .env.test
+dist
 
 package-lock.json
+backend

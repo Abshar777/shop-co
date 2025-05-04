@@ -21,10 +21,15 @@ const app = express();
 
 
 
+
 // -------------------- util middleware-------------------------------
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, 'public')));
+//this file in backend/src/settings/app.ts
+// public is in backend/public
+// so how to public
+
+app.use(express.static(path.join(__dirname, '../../public')));
 
 
 // -------------------- security middleware-------------------------------
@@ -50,6 +55,9 @@ app.use(apiRoutes.ORDER, orderRoutes);
 app.use(apiRoutes.DELIVERY_BOY, deliveryBoyRoutes);
 app.use(apiRoutes.ADMIN, adminRoutes);
 app.use(apiRoutes.NOTIFICATION, notificationRoutes);
+app.get('/health', (req, res) => {
+    res.status(200).json({ status: 'ok' });
+});
 
 // -------------------------  error middleware-------------------------------
 app.use(notFound);

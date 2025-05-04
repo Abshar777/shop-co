@@ -12,6 +12,8 @@ import { toast } from "sonner";
 import { Button } from "@heroui/button";
 import { MdOutlineShoppingBag } from "react-icons/md";
 import { useAddtoCart } from "@/hooks/useCart";
+import { motion } from "framer-motion";
+import { item_variants } from "@/constants/framer-motion";
 
 interface ProductCardProps {
   product: IProduct;
@@ -38,7 +40,11 @@ const ProductCard = ({ product }: ProductCardProps) => {
 
   const { mutate, isPending } = useAddtoCart();
   const handleAddToCart = () => {
-    mutate({ productId: product._id, size: product.sizes[0].size, quantity: 1 });
+    mutate({
+      productId: product._id,
+      size: product.sizes[0].size,
+      quantity: 1,
+    });
   };
 
   // useEffect(() => {

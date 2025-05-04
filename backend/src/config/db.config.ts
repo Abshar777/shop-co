@@ -1,8 +1,9 @@
+import { config } from "dotenv";
 import mongoose from "mongoose";
-
+config();
 const connectDB = async () => {
     try {
-        await mongoose.connect('mongodb://abshar:123@localhost:27017/', {
+        await mongoose.connect(process.env.MONGO_URI || 'mongodb://abshar:123@localhost:27017/', {
             dbName: 'shop-co',
             authSource: "admin",
         });

@@ -1,0 +1,78 @@
+version: "3.8"
+
+services:
+  mongo:
+    image: mongo:latest
+    container_name: mongo_container
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: abshar
+      MONGO_INITDB_ROOT_PASSWORD: 123
+
+  redis:
+    image: redis:alpine
+    container_name: redis_container
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+  backend:
+    image: abshar777/shopco_backend_2:latest
+    container_name: shopco_backend_container
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    depends_on:
+      - mongo
+      - redis
+    environment:
+      PORT: 8000
+      FRONTEND_URL: http://localhost:3000
+      ADMIN_URL: http://localhost:3001
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      ADMIN_EMAIL: admin@gmail.com
+      ADMIN_PASSWORD: admin
+      JWT_REFRESH_SECRET: 8590026442@Abshar*
+      JWT_TOKEN: 8590026442@Abshar*
+      JWT_ACCESS_SECRET: 8590026442@Abshar*
+   
+  admin:
+    image: abshar777/admin_shopco:latest
+    container_name: admin_shopco_container
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    depends_on:
+      - mongo
+      - redis
+    environment:
+      PORT: 3001
+      NEXTAUTH_SECRET: "JUtN0lgNz+xCtfC/uuCx+djZb7HfIUNVyJaBIpjwFnA="
+      NEXT_PUBLIC_BACKEND_URL: http://localhost:8000
+      NEXT_PUBLIC_FRONTEND_URL: http://localhost:3001
+  client:
+    image: abshar777/client_shopco:latest
+    container_name: client_shopco_container
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongo
+      - redis
+    environment:
+      PORT: 3000
+      NEXTAUTH_SECRET: "JUtN0lgNz+xCtfC/uuCx+djZb7HfIUNVyJaBIpjwFnA="
+      NEXT_PUBLIC_BACKEND_URL: http://localhost:8000
+      NEXT_PUBLIC_FRONTEND_URL: http://localhost:3000
+
+
+   
+
+volumes:
+  mongo_data:
+  redis_data:

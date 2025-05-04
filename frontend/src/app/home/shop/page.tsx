@@ -16,11 +16,16 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Suspense } from "react";
 import { useFilterProducts, useProducts } from "@/hooks/useProducts";
 import ProductCardSkeleton from "@/components/loading/ProductCardSkeleton";
+import { motion } from "framer-motion";
+import { container_variants, item_variants } from "@/constants/framer-motion";
 const page = () => {
   const { data, isPending } = useFilterProducts();
   const products = data?.products || [];
   return (
-    <div className="w-full py-5 md:px-8 px-5">
+    <div
+    
+      className="w-full py-5 md:px-8 px-5"
+    >
       <Breadcrumbs />
       <div className="w-full grid md:mt-0 mt-5 grid-cols-1 md:grid-cols-4">
         <div className="col-span-1 md:block hidden">
@@ -46,11 +51,21 @@ const page = () => {
               </Drawer>
             </div>
           </div>
-          <div className="grid md:grid-cols-4 grid-cols-2 gap-5">
+          <motion.div
+            variants={container_variants}
+            initial="hidden"
+            animate="visible"
+            className="grid md:grid-cols-4 grid-cols-2 gap-5"
+          >
             {!isPending &&
               products.length > 0 &&
               products.map((product, index) => (
-                <ProductCard key={product._id + "product"} product={product} />
+                <motion.div
+                  variants={item_variants}
+                  key={product._id + "product"}
+                >
+                  <ProductCard product={product} />
+                </motion.div>
               ))}
             {isPending &&
               Array.from({ length: 8 }).map((_, index) => (
@@ -68,7 +83,7 @@ const page = () => {
                 <p className="text-gray-500">No products found</p>
               </div>
             )}
-          </div>
+          </motion.div>
           <div className="w-full border-t border-border pt-5">
             <Suspense fallback={<div>Loading...</div>}>
               <PaginationDemo
