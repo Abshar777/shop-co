@@ -8,6 +8,7 @@
 - [Admin](https://admin.studioivory.art/)     
 ---
 
+
 ## 📌 Project Overview
 
 - **Frontend**: Next.js (React) + React Query
@@ -24,23 +25,14 @@
 
 ## 📹 Videos
 
-### 1. Introduction to Shop-Co
-<video width="640" height="360" controls>
-  <source src="./github/public/client.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
+### 1. Introduction to Shop-Co (Client Side)  
+📽️ [Watch on Google Drive](https://drive.google.com/file/d/1Tcm3Ktl4lR64hCmnSd3aTjgHjA-I1Rwg/view?usp=drive_link)
 
-### 2.Admin Side Works
-<video width="640" height="360" controls>
-  <source src="videos/video2.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
+### 2. Admin Side Works  
+📽️ [Watch on Google Drive](https://drive.google.com/file/d/1ojhEpk5EtKuyZGPhSOgpCOMOygHHxJ60/view)
 
-### 3. Real-time Order Tracking Demo
-<video width="640" height="360" controls>
-  <source src="./github/public/live.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
+### 3. Real-time Order Tracking Demo  
+📽️ [Watch on Google Drive](https://drive.google.com/file/d/1ojhEpk5EtKuyZGPhSOgpCOMOygHHxJ60/view?usp=drive_link)
 
 
 ## 🧱 System Architecture Diagram
@@ -49,19 +41,20 @@
 +----------------+       +----------------+       +----------------+
 |   Client App   | <---> |   API Server   | <---> |    MongoDB     |
 |  (Next.js)     |       | (Express.js)   |       |                |
-+----------------+       +----------------+       +----------------+
-        |                        |
-        |                        v
-        |                +----------------+
-        |                |     Redis      |
-        |                |  (Pub/Sub &    |
-        |                |   Caching)     |
-        |                +----------------+
-        |                        ^
-        |                        |
-        v                        v
-+----------------+       +----------------+
-| WebSockets via |<----->| Delivery App   |
++----------------+       |                |       +----------------+
+        |                |                ^
+        |                |                |
+        |                v                |
+        |         +-------------+         |
+        |         |    Redis    |---------+
+        |         | (Cache &    |
+        |         |  Pub/Sub)   |
+        |         +-------------+
+        |                ^
+        |                |
+        v                v
++----------------+  <--> +----------------+
+| WebSockets via |       | Delivery App   |
 |   Socket.io    |       | (Real-time)    |
 +----------------+       +----------------+
 ```
