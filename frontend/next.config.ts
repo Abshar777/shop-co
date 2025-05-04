@@ -10,6 +10,10 @@ const nextConfig: NextConfig = {
         hostname: "localhost",
         protocol: "http",
       },
+      {
+        hostname: "api.studioivory.art",
+        protocol: "https",
+      },
     ],
   },
   typescript: {

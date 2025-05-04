@@ -88,7 +88,7 @@ export const useGetOrderById = (id: string) => {
     
     const { data: session } = useSession();
     const token = session?.user?.token || "";
-    const { data: response, isLoading } = useQueryData(['order', id], () => getOrderById(token, id));
+    const { data: response, isLoading } = useQueryData(['order'], () => getOrderById(token, id));
     const responseData = response as IOrderByIdResponse
     return { data: responseData, isLoading }
 }

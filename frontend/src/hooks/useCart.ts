@@ -7,6 +7,7 @@ import { ICart } from "@/types/ICart";
 
 export const useAddtoCart = (type?: "update") => {
     const { data: session } = useSession()
+
     const { mutate, isPending, isSuccess, error } = useMutationData(['cart'], (data: { productId: string, size: string, quantity: number }) => addToCart(data.productId, data.size, data.quantity, session?.user?.token || ""), ['cart'], () => {
         const message = type === "update" ? "Cart updated" : "Product added to cart"
         toast.success(message)
@@ -24,6 +25,9 @@ export const useGetCart = () => {
 
 export const useRemoveFromCart = () => {
     const { data: session } = useSession()
+    if(!session?.user){
+        toast.error("Please login to remove from cart")
+    }
     const { mutate, isPending, isSuccess, error } = useMutationData(['cart'], (data: { productId: string, size: string }) => removeFromCart(data.productId, data.size, session?.user?.token || ""), ['cart'], () => {
         toast.success("Product removed from cart")
     })

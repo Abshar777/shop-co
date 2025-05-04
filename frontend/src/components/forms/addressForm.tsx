@@ -86,6 +86,13 @@ const AddressForm = ({ form, onFormSubmit, control, errors, formRef }: { form: U
                 <div className="p-3 flex flex-col gap-3">
                   {addresses.map((address) => (
                     <Button
+                      onPress={() => {
+                        form.setValue("address", address.address);
+                        form.setValue("city", address.city);
+                        form.setValue("country", address.country);
+                        form.setValue("postalCode", address.postalCode);
+                        form.setValue("street", address.street);
+                      }}
                       key={address.address}
                       variant="bordered"
                       className="w-full bg-muted-foreground/10 rounded-lg cursor-pointer"
