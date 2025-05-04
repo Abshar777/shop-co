@@ -63,9 +63,9 @@
 ## ⚙️ Stack Used
 
 - **Frontend**: Next.js, React, TypeScript, React Query  
-- **Backend**: Node.js, Express.js, TypeScript  
+- **Backend**: Node.js, Express.js, TypeScript, clean architecture
 - **Database**: MongoDB  
-- **Cache & Messaging**: Redis (with Pub/Sub)  
+- **Cache & Messaging**: Redis (with Pub/Sub and caching)  
 - **Real-time**: Socket.io  
 - **Deployment**: Docker, Docker Compose, EC2 Instance (self-hosted)  
 
@@ -76,7 +76,7 @@
 ```plaintext
 shop-co/
 ├── frontend/ # Next.js frontend application
-├── backend/ # Express.js backend API
+├── backend/ # Express.js backend API (clean architecture)
 ├── admin/ # Admin dashboard 
 └── docker-compose.yml # Docker Compose file
 ```
@@ -206,11 +206,7 @@ The WebSocket flow ensures that all relevant parties get the updates instantly:
 
 - **Payment gateway integration**: Add payment options like Stripe or Razorpay for processing payments.
 - **Order analytics dashboard**: Provide an admin panel to analyze order trends, delivery times, and more.
-- **Push notifications**: Implement push notifications for delivery agents, admins, and customers.
-- **Two-factor authentication (2FA)**: Implement multi-factor authentication for enhanced security.
-- **Improved logging & monitoring**: Integrate tools like **Prometheus** and **Grafana** to monitor system health and performance.
-- **Mobile application**: Develop a mobile app using **React Native** for users and delivery agents.
-- **CI/CD pipelines**: Set up **CI/CD pipelines** using GitHub Actions, GitLab CI, or Jenkins to automate builds and deployments.
+- **OTP authentication (OTP)**: Implement multi-factor authentication for enhanced security.
 
 ---
 
