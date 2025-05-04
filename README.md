@@ -206,11 +206,7 @@ The WebSocket flow ensures that all relevant parties get the updates instantly:
 
 - **Payment gateway integration**: Add payment options like Stripe or Razorpay for processing payments.
 - **Order analytics dashboard**: Provide an admin panel to analyze order trends, delivery times, and more.
-- **Push notifications**: Implement push notifications for delivery agents, admins, and customers.
-- **Two-factor authentication (2FA)**: Implement multi-factor authentication for enhanced security.
-- **Improved logging & monitoring**: Integrate tools like **Prometheus** and **Grafana** to monitor system health and performance.
-- **Mobile application**: Develop a mobile app using **React Native** for users and delivery agents.
-- **CI/CD pipelines**: Set up **CI/CD pipelines** using GitHub Actions, GitLab CI, or Jenkins to automate builds and deployments.
+- **OTP authentication (OTP)**: Implement multi-factor authentication for enhanced security.
 
 ---
 
