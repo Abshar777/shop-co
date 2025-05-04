@@ -200,6 +200,7 @@ The WebSocket flow ensures that all relevant parties get the updates instantly:
 - Use **NGINX** or **AWS ALB (Application Load Balancer)** to distribute traffic across multiple backend containers.
 - For session management, consider storing session tokens and user data in **Redis** for shared access.
 
+
 ---
 
 ## 🔮 Future Improvements
