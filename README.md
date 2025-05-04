@@ -2,6 +2,10 @@
 
 **Shop-Co** is a modern, full-stack e-commerce platform featuring real-time order tracking, role-based authentication (Client, Delivery Boy, Admin), and a clean scalable architecture. Built with **Next.js**, **Node.js**, **Express**, **TypeScript**, **MongoDB**, **Redis**, and **WebSockets**, it offers a powerful and responsive shopping experience.
 
+## 🔗Links
+- [Frontned](https://studioivory.art/) 
+- [Backend](https://api.studioivory.art/health) 
+- [Admin](https://admin.studioivory.art/)     
 ---
 
 ## 📌 Project Overview
@@ -16,6 +20,28 @@
 - **Deployment**: Self-hosted on EC2 (Frontend + Backend + Redis + MongoDB)
 
 ---
+
+
+## 📹 Videos
+
+### 1. Introduction to Shop-Co
+<video width="640" height="360" controls>
+  <source src="./github/public/client.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
+
+### 2.Admin Side Works
+<video width="640" height="360" controls>
+  <source src="videos/video2.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
+
+### 3. Real-time Order Tracking Demo
+<video width="640" height="360" controls>
+  <source src="./github/public/live.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
+
 
 ## 🧱 System Architecture Diagram
 
@@ -142,12 +168,14 @@ NEXT_PUBLIC_FRONTEND_URL=https://studioivory.art
 5. Start the services:
    - `docker-compose up -d`
 
-6. (Optional) Set up **NGINX** reverse proxy and **SSL** using **Certbot** for secure HTTPS connections.
+6. Set up **NGINX** reverse proxy and **SSL** using **Certbot** for secure HTTPS connections.
 
 7. Ensure that the EC2 security group allows access to the following ports:
    - **Port `80`** (HTTP)
    - **Port `443`** (HTTPS)
-   - **Port `5000`** (Backend API - optional if using reverse proxy)
+   - **Port `8000`** (Backend API )
+   - **Port `3000`** (Frontend)
+   -  **Port `3001`** (Admin)
 
 ---
 
@@ -181,7 +209,7 @@ The WebSocket flow ensures that all relevant parties get the updates instantly:
 
 ---
 
-## 🔮 Future Improvements (Optional)
+## 🔮 Future Improvements
 
 - **Payment gateway integration**: Add payment options like Stripe or Razorpay for processing payments.
 - **Order analytics dashboard**: Provide an admin panel to analyze order trends, delivery times, and more.
@@ -195,4 +223,4 @@ The WebSocket flow ensures that all relevant parties get the updates instantly:
 
 ## 📝 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE](https://github.com/Abshar777/shop-co/blob/main/LICENSE.txt) file for details.
