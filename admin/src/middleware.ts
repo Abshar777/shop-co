@@ -1,6 +1,7 @@
 // middleware.ts
 import { NextRequest, NextResponse } from "next/server"
 import { withAuth } from "next-auth/middleware";
+import { Roles } from "./types/api";
 
 
 // Create a middleware function without withAuth first
@@ -11,7 +12,9 @@ export default withAuth(
     const isLoggedIn = !!token;
     const userRole = token?.role;
     const isVerified = token?.verified;
-    const protectedRoutes = ["/home/cart", "/home/cart/checkout", "/home/profile", "/home/profile/orders"];
+    const isSuperAdminPage = path.startsWith("/admin/superAdmin");
+    const isAdmin=token?.role===Roles.ADMIN;
+    const isDeliveryBoy=token?.role===Roles.DELIVERY_BOY;
 
     console.log(path, "path 🟢")
     if (path == "/auth/signout") {
@@ -38,9 +41,10 @@ export default withAuth(
         return NextResponse.redirect(new URL("/auth/signout", req.url));
       }
       console.log(userRole, "userRole")
-      // if(userRole !==  ){
-      //   return NextResponse.redirect(new URL("/auth/login", req.url))
-      // }
+      if(isSuperAdminPage && !isAdmin){
+        return NextResponse.redirect(new URL("/admin/dashboard", req.url))
+      }
+    
     }
 
 

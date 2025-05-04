@@ -18,7 +18,7 @@ const NotificationSchema = new Schema<NotificationDocument>(
       },
       type: {
         type: String,
-        enum: ["ORDER", "PROMOTION", "SYSTEM", "DELIVERY"],
+        enum: ["ORDER", "PROMOTION", "SYSTEM", "DELIVERY","VERIFICATION"],
         required: true,
       },
       orderId: {
