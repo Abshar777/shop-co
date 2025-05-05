@@ -1,6 +1,6 @@
+// admin/auth.config.ts
 import { AuthOptions, DefaultSession, User } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-
 
 export const authConfig: AuthOptions = {
   providers: [
@@ -18,7 +18,6 @@ export const authConfig: AuthOptions = {
         console.log("authorize", credentials)
         if (!credentials?.email || !credentials?.name || !credentials.id) {
           console.log("Email and name and id are required.");
-          // throw new Error("Email and password are required.");
           return null;
         }
 
@@ -39,13 +38,41 @@ export const authConfig: AuthOptions = {
         }
       }
     }),
-
   ],
   pages: {
     signIn: "/login" // Custom sign-in page
   },
   session: {
     strategy: "jwt"
+  },
+  cookies: {
+    // Add custom cookie configuration
+    sessionToken: {
+      name: `admin-session-token`,
+      options: {
+        httpOnly: true,
+        sameSite: "lax",
+        path: "/",
+        secure: process.env.NODE_ENV === "production",
+      },
+    },
+    callbackUrl: {
+      name: `admin-callback-url`,
+      options: {
+        sameSite: "lax",
+        path: "/",
+        secure: process.env.NODE_ENV === "production",
+      },
+    },
+    csrfToken: {
+      name: `admin-csrf-token`,
+      options: {
+        httpOnly: true,
+        sameSite: "lax",
+        path: "/",
+        secure: process.env.NODE_ENV === "production",
+      },
+    },
   },
   callbacks: {
     jwt({ token, user, trigger, session }) {
@@ -56,7 +83,6 @@ export const authConfig: AuthOptions = {
         token.email = user.email;
         token.role = user.role;
         token.verified = user.verified;
-
       }
       return token;
     },
@@ -65,8 +91,6 @@ export const authConfig: AuthOptions = {
       return url.startsWith(baseUrl) ? url : `${baseUrl}/`;
     },
     session({ session, token }) {
-
-
       session.user.token = token.token as string;
       session.user.id = token.id as string;
       session.user.name = token.name as string;
@@ -77,11 +101,8 @@ export const authConfig: AuthOptions = {
       return session;
     },
   },
-
-  secret: process.env.NEXTAUTH_SECRET || "secret"
+  secret: process.env.NEXTAUTH_SECRET || "admin"
 };
-
-
 
 declare module "next-auth" {
   interface Session {

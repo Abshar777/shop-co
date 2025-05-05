@@ -11,4 +11,5 @@ export const REDIS_KEYS = {
 
 export enum REDIS_CHANNELS {
     NOTIFICATION = "notification",
+    ORDER_PLACED = "order_placed",
 }

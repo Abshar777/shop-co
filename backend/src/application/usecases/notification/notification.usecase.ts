@@ -17,7 +17,6 @@ export class NotificationUsecase {
     }
 
     async createNotification(notification: INotification) {
-        // WIREUP: socket implementation
         this.redisService.publish(REDIS_CHANNELS.NOTIFICATION, JSON.stringify(notification));
 
         const data = await this.notificationRepository.createNotification(notification);

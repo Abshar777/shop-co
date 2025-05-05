@@ -1,10 +1,7 @@
-// middleware.ts
 import { NextRequest, NextResponse } from "next/server"
 import { withAuth } from "next-auth/middleware";
 import { Roles } from "./types/api";
 
-
-// Create a middleware function without withAuth first
 export default withAuth(
   async function middleware(req) {
     const path = req.nextUrl.pathname
@@ -13,10 +10,11 @@ export default withAuth(
     const userRole = token?.role;
     const isVerified = token?.verified;
     const isSuperAdminPage = path.startsWith("/admin/superAdmin");
-    const isAdmin=token?.role===Roles.ADMIN;
-    const isDeliveryBoy=token?.role===Roles.DELIVERY_BOY;
+    const isAdmin = token?.role === Roles.ADMIN;
+    const isDeliveryBoy = token?.role === Roles.DELIVERY_BOY;
 
     console.log(path, "path 🟢")
+    
     if (path == "/auth/signout") {
       if (!isLoggedIn) {
         return NextResponse.redirect(new URL("/auth/login", req.url));
@@ -26,7 +24,6 @@ export default withAuth(
 
     if (path.startsWith("/auth") && path !== "/auth/signout") {
       if (isLoggedIn && isVerified == "true") {
-        // i want signout from next-auth
         return NextResponse.redirect(new URL("/admin/dashboard", req.url));
       }
       return NextResponse.next()
@@ -44,30 +41,28 @@ export default withAuth(
       if(isSuperAdminPage && !isAdmin){
         return NextResponse.redirect(new URL("/admin/dashboard", req.url))
       }
-    
     }
-
-
 
     return NextResponse.next();
   },
   {
     callbacks: {
-
-
       authorized: ({ token }) => {
-
-
+     
         return true;
       },
     },
+
+    cookies: {
+      sessionToken: {
+        name: `admin-session-token`
+      }
+    }
   }
 );
 
-// Configure matcher to specify which routes to handle
 export const config = {
   matcher: [
-    // Match auth and admin routes, exclude api and static files
     "/auth/:path*",
     "/admin/:path*",
     "/((?!api|_next/static|_next/image|favicon.ico).*)"

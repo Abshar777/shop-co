@@ -125,15 +125,7 @@ const profileCard = ({
               <p className="font-semibold text-gray-900 mt-1">{memberSince}</p>
             </div>
 
-            <div className="bg-white/80 backdrop-blur-sm px-4 py-2 rounded-lg shadow-sm">
-              <div className="flex items-center gap-2">
-                <ShoppingBag size={16} className="text-blue-600" />
-                <span className="text-sm text-gray-700 dark:text-gray-700">
-                  Orders
-                </span>
-              </div>
-              <p className="font-semibold text-gray-900 mt-1">{orders}</p>
-            </div>
+        
           </div>
         </div>
       </div>

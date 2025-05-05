@@ -18,6 +18,7 @@ import { IOrder } from "@/types/IOrder";
 
 export const useOrder = () => {
     const { data: session, update } = useSession();
+    const [DisOpen,setDisOpen]=useState(false)
     const client = useQueryClient()
     const router = useRouter();
     const token = session?.user?.token || "";
@@ -49,7 +50,7 @@ export const useOrder = () => {
     };
 
     const previousAddressData = previousAddress as IPreviousAddressResponse
-    return { form, onFormSubmit, control, errors, formRef, handleCheckout, previousAddressData, previousAddressLoading }
+    return { form, onFormSubmit, control, errors, formRef, handleCheckout, previousAddressData, previousAddressLoading,DisOpen,setDisOpen }
 }
 
 

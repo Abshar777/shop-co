@@ -64,12 +64,6 @@ services:
       JWT_ACCESS_SECRET: 8590026442@Abshar*
     networks:
       - app-network
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 20s
    
   admin:
     image: abshar777/admin_shopco:latest
@@ -79,10 +73,10 @@ services:
       - "3001:3001"
     depends_on:
       backend:
-        condition: service_healthy
+        condition: service_started
     environment:
       PORT: 3001
-      NEXTAUTH_SECRET: "JUtN0lgNz+xCtfC/uuCx+djZb7HfIUNVyJaBIpjwFnA="
+      NEXTAUTH_SECRET: "JUtN0lgNz+xCtfC/uuCx+djZb7HfIUNVyJaBIpjwFnA=/admin"
       NEXT_PUBLIC_BACKEND_URL: https://api.studioivory.art
       NEXT_PUBLIC_FRONTEND_URL: https://admin.studioivory.art
     networks:
@@ -96,10 +90,10 @@ services:
       - "3000:3000"
     depends_on:
       backend:
-        condition: service_healthy
+        condition: service_started
     environment:
       PORT: 3000
-      NEXTAUTH_SECRET: "JUtN0lgNz+xCtfC/uuCx+djZb7HfIUNVyJaBIpjwFnA="
+      NEXTAUTH_SECRET: "JUtN0lgNz+xCtfC/uuCx+djZb7HfIUNVyJaBIpjwFnA=/client"
       NEXT_PUBLIC_BACKEND_URL: https://api.studioivory.art
       NEXT_PUBLIC_FRONTEND_URL: https://studioivory.art
     networks:

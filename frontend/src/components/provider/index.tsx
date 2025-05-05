@@ -6,6 +6,7 @@ import NextTopLoader from "nextjs-toploader";
 import ReactQueryProvider from "./react-query";
 import { SessionProvider, SessionProviderProps } from "next-auth/react";
 import SocketProvider from "./socketProvider";
+import LiveSessionMonitor from "./liveSessionMonitor";
 
 const Provider = ({
   children,
@@ -33,7 +34,7 @@ const Provider = ({
                 richColors
                 theme="light"
               />
-              {children}
+              <LiveSessionMonitor>{children}</LiveSessionMonitor>
             </HeroUIProvider>
           </SocketProvider>
         </ReactQueryProvider>

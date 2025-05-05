@@ -8,6 +8,8 @@ import {
 } from "next-auth/react";
 import ReactQueryProvider from "../providers/react-query";
 import { HeroUIProvider } from "@heroui/react";
+import LiveSessionMonitor from "./liveSessionMonitor";
+import SocketProvider from "../providers/socketProvider";
 export default function Providers({
   session,
   children,
@@ -20,7 +22,11 @@ export default function Providers({
       <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
         <SessionProvider session={session}>
           <ReactQueryProvider>
-            <HeroUIProvider>{children}</HeroUIProvider>
+            <HeroUIProvider>
+              <LiveSessionMonitor>
+                <SocketProvider>{children}</SocketProvider>
+              </LiveSessionMonitor>
+            </HeroUIProvider>
           </ReactQueryProvider>
         </SessionProvider>
       </ThemeProvider>

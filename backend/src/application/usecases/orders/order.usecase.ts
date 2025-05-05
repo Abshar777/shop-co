@@ -6,7 +6,7 @@ import { ProductRepository } from "../../../infrastructure/db/repositories/produ
 import { UserRepository } from "../../../infrastructure/db/repositories/user.repository";
 import { NotificationUsecase } from "../notification/notification.usecase";
 import { RedisService } from "../../../infrastructure/redis/redis";
-import { REDIS_KEYS } from "../../../shared/constants/redis.constant";
+import { REDIS_CHANNELS, REDIS_KEYS } from "../../../shared/constants/redis.constant";
 import { IUserDocument } from "../../../domain/interfaces/user.interface";
 export class OrderUsecase {
     private readonly orderRepository: OrderRepository
@@ -103,6 +103,7 @@ export class OrderUsecase {
             read: false
         })
         await this.cartRepository.clearCart(userId);
+        await this.redisService.publish(REDIS_CHANNELS.ORDER_PLACED, 'order placed');
         return order;
     }
 

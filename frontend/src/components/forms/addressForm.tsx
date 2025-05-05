@@ -1,6 +1,6 @@
 "use client";
 
-import {  useOrder } from "@/hooks/useOrder";
+import { useOrder } from "@/hooks/useOrder";
 import React, { RefObject } from "react";
 import { FormField } from "../ui/form";
 import { Form } from "../ui/form";
@@ -30,8 +30,21 @@ import { CgOptions } from "react-icons/cg";
 import { Button } from "@heroui/button";
 import { Control, FieldErrors, UseFormReturn } from "react-hook-form";
 
-const AddressForm = ({ form, onFormSubmit, control, errors, formRef }: { form: UseFormReturn<any>, onFormSubmit: (data: any) => void, control: Control<any>, errors: FieldErrors<any>, formRef: RefObject<HTMLFormElement> }) => {
-  const { previousAddressData, previousAddressLoading } = useOrder();
+const AddressForm = ({
+  form,
+  onFormSubmit,
+  control,
+  errors,
+  formRef,
+}: {
+  form: UseFormReturn<any>;
+  onFormSubmit: (data: any) => void;
+  control: Control<any>;
+  errors: FieldErrors<any>;
+  formRef: RefObject<HTMLFormElement>;
+}) => {
+  const { previousAddressData, previousAddressLoading, DisOpen, setDisOpen } =
+    useOrder();
   const addresses = previousAddressData?.address || [];
   const isMobile = useIsMobile();
   return (
@@ -68,7 +81,10 @@ const AddressForm = ({ form, onFormSubmit, control, errors, formRef }: { form: U
               </SelectTrigger>
               <SelectContent className="bg-muted-foreground/10 backdrop-blur-sm">
                 {addresses.map((address) => (
-                  <SelectItem key={address.address} value={address.address.toString()}>
+                  <SelectItem
+                    key={address.address}
+                    value={address.address.toString()}
+                  >
                     {address.address}
                   </SelectItem>
                 ))}
@@ -76,12 +92,14 @@ const AddressForm = ({ form, onFormSubmit, control, errors, formRef }: { form: U
             </Select>
           )}
           {isMobile && (
-            <Drawer>
+            <Drawer open={DisOpen} onOpenChange={(open) =>setDisOpen(open)}>
               <DrawerTrigger className="bg-gray-300/30 md:hidden flex cursor-pointer rounded-full hover:scale-105 transition-all duration-300 border-input border-1 p-1">
                 <FaAddressCard />
               </DrawerTrigger>
               <DrawerContent className="w-full flex  justify-center">
-                <DrawerTitle className="text-center py-2">Recent Addresses</DrawerTitle>
+                <DrawerTitle className="text-center py-2">
+                  Recent Addresses
+                </DrawerTitle>
                 {/* <ScrollArea className="h-[calc(60vh-10rem)] p-3"> */}
                 <div className="p-3 flex flex-col gap-3">
                   {addresses.map((address) => (
@@ -92,6 +110,7 @@ const AddressForm = ({ form, onFormSubmit, control, errors, formRef }: { form: U
                         form.setValue("country", address.country);
                         form.setValue("postalCode", address.postalCode);
                         form.setValue("street", address.street);
+                        setDisOpen(false);
                       }}
                       key={address.address}
                       variant="bordered"
@@ -108,7 +127,11 @@ const AddressForm = ({ form, onFormSubmit, control, errors, formRef }: { form: U
         </div>
       </div>
       <Form {...form}>
-        <form ref={formRef} onSubmit={onFormSubmit} className="w-full grid md:grid-cols-2 gap-4">
+        <form
+          ref={formRef}
+          onSubmit={onFormSubmit}
+          className="w-full grid md:grid-cols-2 gap-4"
+        >
           <FormField
             control={control}
             name="address"

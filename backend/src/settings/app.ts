@@ -18,28 +18,55 @@ import notificationRoutes from '../presentation/routes/notification.route';
 
 dotenv.config();
 const app = express();
+const allowedOrigins = [
+    process.env.FRONTEND_URL as string,
+    process.env.ADMIN_URL as string
+];
 
 
+
+app.use(cookieParser())
+app.use(
+    cors({
+        origin: function (origin, callback) {
+            if (!origin || allowedOrigins.includes(origin)) {
+                // console.log(origin, "origin when cors is used");
+                callback(null, origin);
+            } else {
+                // console.log(origin, "origin when cors is not used");
+                callback(new Error("Not allowed by CORS"));
+            }
+        },
+        credentials: true,
+        methods: ["GET", "POST", "PATCH", "DELETE", "PUT"],
+        allowedHeaders: ["Content-Type", "Authorization"],
+    })
+);
+
+app.options("*", (req, res) => {
+    const origin = req.headers.origin;
+    if (allowedOrigins.includes(origin as string)) {
+        // console.log(origin, "origin when cors is used in options");
+        res.header("Access-Control-Allow-Origin", origin);
+        res.header("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE, PUT");
+        res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+        res.sendStatus(204);
+    } else {
+        // console.log(origin, "origin when cors is not used in options");
+        res.status(403).send("CORS Preflight Request Not Allowed");
+    }
+});
 
 
 // -------------------- util middleware-------------------------------
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-//this file in backend/src/settings/app.ts
-// public is in backend/public
-// so how to public
+
 
 app.use(express.static(path.join(__dirname, '../../public')));
 
 
 // -------------------- security middleware-------------------------------
-app.use(cors({
-    origin: [process.env.FRONTEND_URL as string, process.env.ADMIN_URL as string],
-    credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-}));
-app.use(cookieParser())
-app.use(helmet())
 app.use(mongoSanitize())
 
 if (process.env.NODE_ENV === "development") app.use(morgan("dev"));

@@ -8,7 +8,7 @@ import http from 'http';
 import connectSocket from '../config/socket.config';
 import { RedisService } from '../infrastructure/redis/redis';
 import { REDIS_CHANNELS } from '../shared/constants/redis.constant';
-import { handleRedisAndSocketMessage } from '../infrastructure/redis/redisMessagesHandler';
+import { handleRedisAndSocketMessageAdmin, handleRedisAndSocketMessageClient } from '../infrastructure/redis/redisMessagesHandler';
 import { socketIoSetup } from '../infrastructure/socket/socketHandler';
 
 process.on("uncaughtException", (err) => {
@@ -37,8 +37,14 @@ async function main() {
     redisService.connect();
     const server = http.createServer(app);
     const io = connectSocket(server);
-    socketIoSetup(io)
-    handleRedisAndSocketMessage(redisService, io);
+    const clientNameSpace = io.of('/client');
+    socketIoSetup(clientNameSpace);
+    handleRedisAndSocketMessageClient(redisService, clientNameSpace);
+
+    const adminNameSpace = io.of('/admin');
+    socketIoSetup(adminNameSpace);
+    handleRedisAndSocketMessageAdmin(redisService, adminNameSpace);
+
 
 
     server.listen(PORT, () => {

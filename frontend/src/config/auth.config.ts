@@ -1,3 +1,4 @@
+// client/auth.config.ts
 import { AuthOptions, User } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
@@ -32,6 +33,35 @@ export const authConfig: AuthOptions = {
     session: {
         strategy: "jwt"
     },
+    cookies: {
+        // Add custom cookie configuration
+        sessionToken: {
+            name: `client-session-token`,
+            options: {
+                httpOnly: true,
+                sameSite: "lax",
+                path: "/",
+                secure: process.env.NODE_ENV === "production",
+            },
+        },
+        callbackUrl: {
+            name: `client-callback-url`,
+            options: {
+                sameSite: "lax",
+                path: "/",
+                secure: process.env.NODE_ENV === "production",
+            },
+        },
+        csrfToken: {
+            name: `client-csrf-token`,
+            options: {
+                httpOnly: true,
+                sameSite: "lax",
+                path: "/",
+                secure: process.env.NODE_ENV === "production",
+            },
+        },
+    },
     callbacks: {
         jwt({ token, user, trigger, session }) {
             if (user) {
@@ -52,8 +82,6 @@ export const authConfig: AuthOptions = {
             return url.startsWith(baseUrl) ? url : `${baseUrl}/`;
         },
         session({ session, token }) {
-
-
             session.user.token = token.token as string;
             session.user.id = token.id as string;
             session.user.name = token.name as string;
@@ -63,7 +91,7 @@ export const authConfig: AuthOptions = {
             return session;
         },
     },
-    secret: process.env.NEXTAUTH_SECRET || "secret"
+    secret: process.env.NEXTAUTH_SECRET || "client"
 };
 
 declare module "next-auth" {

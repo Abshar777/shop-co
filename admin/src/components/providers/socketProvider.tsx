@@ -51,7 +51,7 @@ const SocketProvider = ({ children }: { children: React.ReactNode }) => {
       console.log("🟢 connected to socket");
     });
 
-    socket.on("notification", async (data) => {
+    socket.on("order_placed", async (data) => {
       const audio = audioRef.current;
       if (audio) {
         audio.play().catch((err) => {
@@ -59,25 +59,9 @@ const SocketProvider = ({ children }: { children: React.ReactNode }) => {
         });
       }
 
-      console.log("🟢 notification", data);
-      toast.info(data.message, {
-        description: data.description,
-        action: {
-          label: "View",
-          onClick: () => {
-            if (data?.orderId) {
-              router.push(`/home/profile/orders/${data.orderId}`);
-            } else {
-              console.warn("No orderId provided in notification data");
-            }
-          },
-        },
-      });
-
-      await client.invalidateQueries({ queryKey: ["notifications"] });
+      console.log("🟢 order_placed", data);
+      toast.info(data);
       await client.invalidateQueries({ queryKey: ["orders"] });
-      await client.invalidateQueries({ queryKey: ["order"] });
-      await client.invalidateQueries({ queryKey: ["products"] });
     });
 
     socket.on("disconnect", () => {
