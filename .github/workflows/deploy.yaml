@@ -27,7 +27,7 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build and push auth-service
+      - name: Build and push admin
         uses: docker/build-push-action@v5
         with:
           context: ./admin
@@ -35,7 +35,7 @@ jobs:
           push: true
           tags: abshar777/admin_shopco:latest
 
-      - name: Build and push user-service
+      - name: Build and push client
         uses: docker/build-push-action@v5
         with:
           context: ./frontend
@@ -43,7 +43,7 @@ jobs:
           push: true
           tags: abshar777/client_shopco:latest
 
-      - name: Build and push nginx-gateway
+      - name: Build and push backend
         uses: docker/build-push-action@v5
         with:
           context: ./backend
