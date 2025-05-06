@@ -64,7 +64,12 @@ services:
       JWT_ACCESS_SECRET: 8590026442@Abshar*
     networks:
       - app-network
-   
+    healthcheck:
+       test: ["CMD", "curl", "-f", "https://localhost:8000/health"]
+       interval: 10s
+       timeout: 5s
+       retries: 5
+       start_period: 15s
   admin:
     image: abshar777/admin_shopco:latest
     container_name: admin_shopco_container
